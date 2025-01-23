@@ -1,53 +1,285 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-    <title>Mohammed Tarek Fatal</title>
+    <title>Mohammed Tarek Fatal - SAP B1 Expert</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #1e40af;
+            --dark: #1f2937;
+            --light: #f3f4f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f6f8fc 0%, #e2e8f0 100%);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        header {
+            position: fixed;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+            }
+
+            .navigation {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: rgba(255, 255, 255, 0.95);
+                padding: 1rem;
+                transform: translateY(-150%);
+                transition: transform 0.3s ease;
+            }
+
+            .navigation.active {
+                transform: translateY(0);
+            }
+
+            .navigation a {
+                display: block;
+                margin: 1rem 0;
+                text-align: center;
+            }
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .navigation a {
+            color: var(--dark);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .navigation a:hover, .logo:hover {
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .main {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%);
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 4rem;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-content h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 1rem;
+        }
+
+        .hero-content span {
+            color: var(--primary);
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            display: block;
+        }
+
+        .section {
+            padding: 5rem 2rem;
+        }
+
+        .title {
+            text-align: center;
+            font-size: clamp(2rem, 4vw, 2.5rem);
+            margin-bottom: 3rem;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        .icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s;
+            height: 100%;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px) scale(1.02);
+        }
+
+        .project-category {
+            color: #666;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .project-title {
+            color: var(--dark);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .contact {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .social-icons a {
+            color: var(--dark);
+            font-size: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .social-icons a:hover {
+            color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        @media (max-width: 480px) {
+            .section {
+                padding: 3rem 1rem;
+            }
+
+            .card, .project-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-
     <header>
-        <a href="#" class="logo">Tarek</a>
-        <nav class="navigation">
-            <a href="#Skills">Services</a>
-            <a href="#projects">Projects</a>
-            <a href="#contact">Contact</a>
-        </nav>
+        <div class="nav-container">
+            <a href="#" class="logo">Tarek</a>
+            <div class="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+            <nav class="navigation">
+                <a href="#skills">Services</a>
+                <a href="#projects">Projects</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
     </header>
 
-
     <section class="main">
-        <div>
+        <div class="hero-content">
             <h2>Hello, I'm Tarek<br><span>SAP B1 Developer</span></h2>
             <h3>I build life changing Software</h3>
             <a href="#projects" class="main-btn">View my work</a>
         </div>
     </section>
 
-    <section class="cards" id="Skills">
+    <section class="section" id="skills">
         <h2 class="title">Services</h2>
-        <div class="content">
+        <div class="grid-container">
             <div class="card">
                 <div class="icon">
-                    <i class="fas fa-edit"></i>
+                    <i class="fas fa-code"></i>
                 </div>
                 <div class="info">
                     <h3>SDK Development</h3>
-                    <p>SAP Business One SDK is a toolkit which contains programming interfaces, utilities and documentation which allow programmers to add custom features in the ERP or interface with external applications</p>
+                    <p>Expert in SAP Business One SDK implementation and custom feature development</p>
                 </div>
             </div>
-            <div class="card"> 
+            <div class="card">
                 <div class="icon">
-                    <i class="fas fa-cogs"></i>
+                    <i class="fas fa-puzzle-piece"></i>
                 </div>
                 <div class="info">
-                    <h3>SAP B1  Add Ons</h3>
-                    <p>SAP certified Add-Ons are a great way to further enhance and extend the power of SAP Business One. Add-on products expand SAP Business One by adding depth or breadth to the base product. These add-ons are developed by experts in their field, and are then tested to work with the application.</p>
+                    <h3>SAP B1 Add Ons</h3>
+                    <p>Creating certified Add-Ons to enhance and extend SAP Business One functionality</p>
                 </div>
             </div>
             <div class="card">
@@ -55,88 +287,43 @@
                     <i class="fas fa-database"></i>
                 </div>
                 <div class="info">
-                    <h3>Database</h3>
-                    <p>Databases are crucial to building applications. They store data that make our applications work like they should. A database query is a request for a database’s data so we can retrieve or manipulate it</p>
+                    <h3>Database Management</h3>
+                    <p>Comprehensive database solutions and optimizations for business applications</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="projects" id="projects">
+    <section class="section" id="projects">
         <h2 class="title">Projects</h2>
-        <div class="content">
+        <div class="grid-container">
             <div class="project-card">
-                <div class="project-image">
-                    <img src="images/Addon.png" />
-                </div>
                 <div class="project-info">
-                    <p class="project-category">SAP B1 SDK, DI API, UI, Server DI, C#, VB.NET, REST API</p>
-                    <strong class="project-title">
-                        <span>Custom Add Ons</span>
-                    </strong>
+                    <p class="project-category">SAP B1 SDK, DI API, UI, Server DI</p>
+                    <h3 class="project-title">Custom Add Ons</h3>
+                    <p>Development of custom solutions using C#, VB.NET, and REST API</p>
                 </div>
             </div>
             <div class="project-card">
-                <div class="project-image">
-                    <img src="images/Database.png" />
-                </div>
                 <div class="project-info">
-                    <p class="project-category">SQL Server, HANA, SQL Queries, SP's, UDF's, Triggers, Backups, scheduling tasks, DB recovery</p>
-                    <strong class="project-title">
-                        <span>Database management</span>
-                    </strong>
+                    <p class="project-category">SQL Server, HANA, Database Management</p>
+                    <h3 class="project-title">Database Solutions</h3>
+                    <p>Implementation of SQL queries, stored procedures, and database optimization</p>
                 </div>
             </div>
             <div class="project-card">
-                <div class="project-image">
-                    <img src="images/migration.jpg" />
-                </div>
                 <div class="project-info">
-                    <p class="project-category">Data Migration from legacy systems to SAP Business One, using Data Transfer Workbench(DTW), Copy Express and other tools</p>
-                    <strong class="project-title">
-                        <span>Data Migration</span>
-                    </strong>
-                </div>
-            </div>
-            <div class="project-card">
-                <div class="project-image">
-                    <img src="images/Customization.png" />
-                </div>
-                <div class="project-info">
-                    <p class="project-category">Customization of print layouts using the Print Layout Designer(Coresuite) and Crystal Reports</p>
-                    <strong class="project-title">
-                        <span>Customization</span>
-                    </strong>
-                </div>
-            </div>
-            <div class="project-card">
-                <div class="project-image">
-                    <img src="images/Dashboarding.png" />
-                </div>
-                <div class="project-info">
-                    <p class="project-category">Dashboarding and Report Tools like Crystal Reports, Pervasive Analytics, SSRS, Tableau, Power BI, Xcelsius, DOMO, QlikView, Boyum Dashboards :),  SAP Fiori</p>
-                    <strong class="project-title">
-                        <span>Dashboarding and Report Tools</span>       
-                    </strong>
-                </div>
-            </div>
-            <div class="project-card">
-                <div class="project-image">
-                    <img src="images/Third.png" />
-                </div>
-                <div class="project-info">
-                    <p class="project-category">Boyum B1 Usability Package (B1UP) and strong Coresuite knowledge(country package and FSM)</p>
-                    <strong class="project-title">
-                        <span>Third party Add-Ons</span>                 
-                    </strong>
+                    <p class="project-category">System Integration & Migration</p>
+                    <h3 class="project-title">Data Migration</h3>
+                    <p>Expert in DTW and Copy Express for seamless system transitions</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="cards contact" id="contact">
+    <section class="section contact" id="contact">
         <h2 class="title">Let's work together</h2>
-        <div class="content">
+        <div class="grid-container">
             <div class="card">
                 <div class="icon">
                     <i class="fas fa-phone"></i>
@@ -152,14 +339,14 @@
                 </div>
                 <div class="info">
                     <h3>Email</h3>
-                    <p>delmar.t@hotmail.com</p>
+                    <p>SAPB1.Tarek.Fatal@outlook.com</p>
                 </div>
             </div>
         </div>
     </section>
-    
-    <footer class="footer">
-        <p class="footer-title">Copyrights @ <span>Tarek Fatal</span></p>
+
+    <footer>
+        <p>Copyrights © Tarek Fatal</p>
         <div class="social-icons">
             <a href="#"><i class="fab fa-linkedin"></i></a>
             <a href="#"><i class="fab fa-twitter"></i></a>
@@ -167,5 +354,28 @@
             <a href="#"><i class="fab fa-youtube"></i></a>
         </div>
     </footer>
+
+    <script>
+        const hamburger = document.querySelector('.hamburger');
+        const navigation = document.querySelector('.navigation');
+
+        hamburger.addEventListener('click', () => {
+            navigation.classList.toggle('active');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!hamburger.contains(e.target) && !navigation.contains(e.target)) {
+                navigation.classList.remove('active');
+            }
+        });
+
+        // Close menu when clicking a link
+        document.querySelectorAll('.navigation a').forEach(link => {
+            link.addEventListener('click', () => {
+                navigation.classList.remove('active');
+            });
+        });
+    </script>
 </body>
 </html>

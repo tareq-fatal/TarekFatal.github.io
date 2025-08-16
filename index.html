@@ -101,8 +101,8 @@
     header{position:sticky; top:0; z-index:10; backdrop-filter:blur(8px); background:rgba(7,26,46,.85); border-bottom:1px solid rgba(255,255,255,.06)}
     .nav{display:flex; align-items:center; justify-content:space-between; height:72px}
     .brand{display:flex; align-items:center; gap:12px; font-weight:700}
-    .brand-logo{height:28px; width:auto; display:inline-block; filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))}
-    .logo-fallback{display:none; padding:6px 10px; border-radius:10px; background:linear-gradient(135deg, rgba(10,110,209,.25), rgba(10,110,209,.45)); border:1px solid rgba(255,255,255,.12)}
+    .brand-logo{height:28px; width:auto; display:none; filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))}
+    .logo-fallback{display:inline-flex; padding:6px 10px; border-radius:10px; background:linear-gradient(135deg, rgba(10,110,209,.25), rgba(10,110,209,.45)); border:1px solid rgba(255,255,255,.12)}
 
     nav{display:flex; align-items:center; gap:12px}
     .btn{display:inline-flex; align-items:center; gap:10px; padding:10px 14px; border-radius:12px; font-weight:700; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.05); transition:transform .12s ease, box-shadow .12s ease, background .2s ease}
@@ -142,6 +142,9 @@
     .sticky-cta{position:fixed; right:12px; bottom:12px; z-index:20}
     .sticky-cta .btn{box-shadow:0 10px 20px rgba(10,110,209,.35)}
     @media(min-width:781px){.sticky-cta{display:none}}
+    /* Inquiry template styles */
+    .card textarea{width:100%; min-height:220px; border-radius:12px; border:1px solid rgba(255,255,255,.15); background:rgba(255,255,255,.03); color:var(--text); padding:12px; resize:vertical}
+    .card .cta{margin-top:12px}
   </style>
 </head>
 <body>
@@ -149,7 +152,7 @@
     <div class="wrap nav">
       <div class="brand">
         <!-- Optional SAP B1 logo: place a file named sap-b1-logo.png next to index.html -->
-        <img src="sap-b1-logo.png" alt="SAP Business One" class="brand-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex'">
+        <img src="sap-b1-logo.png" alt="SAP Business One" class="brand-logo" loading="lazy">
         <span class="logo-fallback">B1 • FSM</span>
       </div>
       <nav>
@@ -282,6 +285,18 @@
           <a class="btn" href="https://www.linkedin.com/in/tarek-fatal-3a1000111/" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-linkedin"></i>LinkedIn</a>
         </div>
         <p class="muted" style="margin-top:10px" data-i18n="disclaimer">Independent — not affiliated with SAP SE.</p>
+
+        <div class="grid" style="margin-top:18px">
+          <article class="card">
+            <h3><i class="fa-solid fa-envelope-open-text"></i> <span data-i18n="template_title">Inquiry Email Template</span></h3>
+            <p class="muted" data-i18n="template_hint">Copy this and fill the details, or open a prefilled email.</p>
+            <textarea id="inq-template" readonly></textarea>
+            <div class="cta">
+              <button class="btn" id="copy-template" type="button"><i class="fa-regular fa-copy"></i> <span data-i18n="template_copy_btn">Copy</span></button>
+              <a class="btn primary" id="mailto-prefill" data-mailto="true" href="mailto:SAPB1.Tarek.Fatal@outlook.com?subject=SAP%20B1%20%2F%20FSM%20Inquiry"><i class="fa-solid fa-paper-plane"></i> <span data-i18n="template_mail_btn">Open prefilled email</span></a>
+            </div>
+          </article>
+        </div>
       </div>
     </section>
 
@@ -309,6 +324,15 @@
     const $can = document.getElementById('canonical');
     if($can) $can.href = canon;
 
+    // Logo fallback: show badge until image loads successfully
+    const logoEl = document.querySelector('.brand-logo');
+    if(logoEl){
+      logoEl.addEventListener('load', ()=>{
+        logoEl.style.display = 'inline-block';
+        const fb = logoEl.nextElementSibling; if(fb) fb.style.display = 'none';
+      });
+    }
+
     // Reveal-on-scroll for cards
     const io = new IntersectionObserver(entries=>{
       entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
@@ -317,10 +341,154 @@
 
     // i18n dictionary
     const t = {
-      en: { /* unchanged for brevity */ },
-      de: { /* unchanged for brevity */ },
-      ar: { /* unchanged for brevity */ },
-      "zh-CN": {
+      en: {
+        nav_services:'Services', nav_process:'Process', nav_faq:'FAQ', nav_contact:'Contact',
+        tagline:'SAP Business One · SAP Field Service Management',
+        headline:'SAP B1 + FSM Freelancer',
+        lead:'Add‑ons (SDK) in C#/.NET with UI API & DI API · Company integrations / data exchange · SQL queries · Crystal Reports · coresuite & Boyum · FSM Cloud Reporting & Dashboards (CRD).',
+        btn_contact:'Email me', btn_email:'Email',
+        services_title:'Services',
+        svc1_title:'Add‑ons (SDK)',
+        svc1_desc:'C#/.NET with UI API & DI API · clean UX, validations, background jobs, safe COM handling.',
+        svc2a_title:'Company Integrations',
+        svc2a_desc:'CSV/XML imports & exports, SFTP jobs, mapping to UDFs/tables, and safe batch processing with logs/retries.',
+        svc2_title:'Reporting',
+        svc2_desc:'Crystal Reports for SAP Business One · coresuite reports · Boyum printouts.',
+        svc3_title:'SQL',
+        svc3_desc:'Queries, views and performance‑friendly data models for B1 documents.',
+        svc4_title:'FSM (CRD)',
+        svc4_desc:'SAP FSM Cloud Reporting & Dashboards (CRD) and checklist configuration.',
+        svc5_title:'Support',
+        svc5_desc:'1st & 2nd level support for SAP B1 users · troubleshooting and documentation.',
+        svc6_title:'Training / Workshops',
+        svc6_desc:'User training for SAP B1 basics, Crystal Reports usage, and FSM CRD dashboards (EN/DE/AR).',
+        svc7_title:'coresuite Country Package',
+        svc7_desc:'Layouts & print profiles, script tweaks, and report customization for coresuite Country Package.',
+        svc8_title:'FSM Checklist XML → B1 & Invoicing',
+        svc8_desc:'Parse checklist XML to UDFs/tables, map values into documents, and generate invoices — supports mass/batch processing.',
+        process_title:'Process',
+        p1_title:'1) Discover & Scope', p1_desc:'Short call & sample files; define target docs/UDFs, volume, and timeline.',
+        p2_title:'2) Map & Design', p2_desc:'Field mapping, validation rules, and staging tables/views for safe loads.',
+        p3_title:'3) Build & Test', p3_desc:'Implement SDK/queries/reports; run test batches with logs and rollback options.',
+        p4_title:'4) Deploy & Monitor', p4_desc:'Schedule batch jobs (SFTP/CSV/XML), handover docs, and support.',
+        faq_title:'FAQ',
+        faq_q_int:'Do you handle company/system integrations for SAP B1?',
+        faq_a_int:'Yes. CSV/XML imports/exports, SFTP jobs, mapping to UDFs/tables, and safe batch processing with logging and retries.',
+        faq_q4:'Do you work with the coresuite Country Package?',
+        faq_a4:'Yes. Layouts, print profiles, script adjustments, and report customization for coresuite Country Package.',
+        faq_q5:'Can you map FSM checklist XML into B1 and mass‑invoice?',
+        faq_a5:'Yes. I parse checklist XML into UDFs/tables, map values to documents, and generate invoices with batch processing.',
+        faq_q3:'Do you provide training?',
+        faq_a3:'Yes. User training and short workshops for SAP B1 basics, Crystal Reports, and FSM CRD dashboards.',
+        faq_q2:'What SAP B1 work do you cover?',
+        faq_a2:'Add-ons with SDK (UI/DI API), Crystal Reports, coresuite/Boyum printouts, SQL queries and data models.',
+        faq_q1:'Do you work remotely and in which languages?',
+        faq_a1:'Yes, remote across Germany/EU. I work in English, German, and Arabic.',
+        contact_title:'Contact', disclaimer:'Independent — not affiliated with SAP SE.',
+        template_title:'Inquiry Email Template',
+        template_hint:'Copy this and fill the details, or open a prefilled email.',
+        template_copy_btn:'Copy', template_copied:'Copied!',
+        template_mail_btn:'Open prefilled email'
+      },
+      de: {
+        nav_services:'Leistungen', nav_process:'Ablauf', nav_faq:'FAQ', nav_contact:'Kontakt',
+        tagline:'SAP Business One · SAP Field Service Management',
+        headline:'Freelancer für SAP B1 + FSM',
+        lead:'Add‑ons (SDK) mit C#/.NET und UI/DI API · Firmen‑Integrationen / Datenaustausch · SQL‑Abfragen · Crystal Reports · coresuite & Boyum · FSM Cloud Reporting & Dashboards (CRD).',
+        btn_contact:'E‑Mail senden', btn_email:'E‑Mail',
+        services_title:'Leistungen',
+        svc1_title:'Add‑ons (SDK)',
+        svc1_desc:'C#/.NET mit UI API & DI API · saubere UX, Validierungen, Hintergrundprozesse, sicheres COM‑Handling.',
+        svc2a_title:'Firmen‑Integrationen',
+        svc2a_desc:'CSV/XML Import & Export, SFTP‑Jobs, Mapping in UDFs/Tabellen und sichere Massenverarbeitung mit Logs/Retry.',
+        svc2_title:'Reporting',
+        svc2_desc:'Crystal Reports für SAP Business One · coresuite‑Berichte · Boyum‑Drucke.',
+        svc3_title:'SQL',
+        svc3_desc:'Abfragen, Views und performante Datenmodelle für B1‑Belege.',
+        svc4_title:'FSM (CRD)',
+        svc4_desc:'SAP FSM Cloud Reporting & Dashboards (CRD) und Checklisten‑Konfiguration.',
+        svc5_title:'Support',
+        svc5_desc:'1st & 2nd Level Support für SAP‑B1‑User · Troubleshooting und Dokumentation.',
+        svc6_title:'Schulungen / Workshops',
+        svc6_desc:'Anwenderschulungen zu SAP B1 Grundlagen, Crystal Reports und FSM‑CRD Dashboards (DE/EN/AR).',
+        svc7_title:'coresuite Country Package',
+        svc7_desc:'Layouts & Druckprofile, Skript‑Anpassungen und Report‑Customizing für das coresuite Country Package.',
+        svc8_title:'FSM‑Checklisten‑XML → B1 & Faktura',
+        svc8_desc:'Checklisten‑XML in UDFs/Tabellen einlesen, Werte in Belege mappen und Rechnungen erzeugen — auch als Massenverarbeitung.',
+        process_title:'Ablauf',
+        p1_title:'1) Klärung & Scope', p1_desc:'Kurzer Call & Beispieldateien; Zielbelege/UDFs, Datenmenge und Zeitplan festlegen.',
+        p2_title:'2) Mapping & Design', p2_desc:'Feld‑Mapping, Prüfregeln sowie Staging‑Tabellen/Views für sichere Ladeprozesse.',
+        p3_title:'3) Umsetzung & Test', p3_desc:'SDK/Abfragen/Reports implementieren; Test‑Batches mit Logs und Rollback.',
+        p4_title:'4) Go‑Live & Monitoring', p4_desc:'Batch‑Jobs (SFTP/CSV/XML) einplanen, Übergabe‑Doku und Support.',
+        faq_title:'FAQ',
+        faq_q_int:'Übernimmst du Firmen‑/System‑Integrationen für SAP B1?',
+        faq_a_int:'Ja. CSV/XML Import/Export, SFTP‑Jobs, Mapping in UDFs/Tabellen sowie sichere Massenverarbeitung mit Logging und Retries.',
+        faq_q4:'Arbeitest du mit dem coresuite Country Package?',
+        faq_a4:'Ja. Layouts, Druckprofile, Skript‑Anpassungen und Report‑Customizing für das coresuite Country Package.',
+        faq_q5:'Kannst du FSM‑Checklisten‑XML nach B1 mappen und Massen‑Faktura erzeugen?',
+        faq_a5:'Ja. XML in UDFs/Tabellen einlesen, Werte in Belege mappen und Rechnungen per Batch verarbeiten.',
+        faq_q3:'Bietest du Schulungen an?',
+        faq_a3:'Ja. Anwenderschulungen und kurze Workshops zu SAP‑B1‑Grundlagen, Crystal Reports und FSM‑CRD.',
+        faq_q2:'Welche SAP‑B1‑Leistungen deckst du ab?',
+        faq_a2:'Add‑ons mit SDK (UI/DI API), Crystal Reports, coresuite/Boyum‑Drucke, SQL‑Abfragen und Datenmodelle.',
+        faq_q1:'Arbeitest du remote und in welchen Sprachen?',
+        faq_a1:'Ja, remote in Deutschland/EU. Ich arbeite auf Deutsch, Englisch und Arabisch.',
+        contact_title:'Kontakt', disclaimer:'Unabhängig — keine Zugehörigkeit zur SAP SE.',
+        template_title:'E‑Mail‑Vorlage für Anfragen',
+        template_hint:'Kopiere die Vorlage und fülle sie aus oder öffne eine vorbefüllte E‑Mail.',
+        template_copy_btn:'Kopieren', template_copied:'Kopiert!',
+        template_mail_btn:'Vorbefüllte E‑Mail öffnen'
+      },
+      ar: {
+        nav_services:'الخدمات', nav_process:'الآلية', nav_faq:'الأسئلة الشائعة', nav_contact:'التواصل',
+        tagline:'ساب بزنس ون · إدارة خدمات الميدان (FSM)',
+        headline:'مستقل في SAP B1 و FSM',
+        lead:'إضافات (SDK) بلغة C#/.NET مع UI API و DI API · تكاملات الشركات / تبادل البيانات · استعلامات SQL · تقارير Crystal · coresuite و Boyum · تقارير ولوحات FSM (CRD).',
+        btn_contact:'أرسل بريدًا إلكترونيًا', btn_email:'بريد إلكتروني',
+        services_title:'الخدمات',
+        svc1_title:'إضافات (SDK)',
+        svc1_desc:'C#/.NET مع UI API و DI API · واجهات نظيفة، تحقق من البيانات، مهام خلفية، وتعامل آمن مع COM.',
+        svc2a_title:'تكاملات الشركات',
+        svc2a_desc:'استيراد/تصدير CSV/XML، مهام SFTP، ربط القيم إلى حقول/جداول، ومعالجة دفعية آمنة مع سجلات وإعادة محاولات.',
+        svc2_title:'التقارير',
+        svc2_desc:'Crystal Reports لـ SAP Business One · تقارير coresuite · طباعة Boyum.',
+        svc3_title:'SQL',
+        svc3_desc:'استعلامات وعروض ونماذج بيانات فعّالة لوثائق B1.',
+        svc4_title:'FSM (CRD)',
+        svc4_desc:'تقارير ولوحات SAP FSM (CRD) وإعداد قوائم التحقق.',
+        svc5_title:'الدعم',
+        svc5_desc:'دعم المستوى الأول والثاني لمستخدمي SAP B1 · استكشاف الأخطاء والتوثيق.',
+        svc6_title:'تدريب / ورش عمل',
+        svc6_desc:'تدريب المستخدمين على أساسيات SAP B1 واستخدام Crystal Reports ولوحات FSM‑CRD (عربي/ألماني/إنجليزي).',
+        svc7_title:'حزمة البلدان من coresuite',
+        svc7_desc:'تصميم النماذج وملفات الطباعة وتعديلات السكربت وتخصيص التقارير لحزمة البلدان من coresuite.',
+        svc8_title:'ملفات XML لقوائم FSM → SAP B1 والفوترة',
+        svc8_desc:'قراءة XML إلى الحقول/الجداول، ربط القيم بالمستندات، وإنشاء الفواتير — يدعم المعالجة الدُفعية.',
+        process_title:'الآلية',
+        p1_title:'1) فهم المتطلبات', p1_desc:'مكالمة قصيرة وملفات نموذجية؛ تحديد المستندات/الحقول والكميات والجدول الزمني.',
+        p2_title:'2) التخطيط والربط', p2_desc:'خرائط الحقول وقواعد التحقق وجداول/عروض مرحلية للتحميل الآمن.',
+        p3_title:'3) التنفيذ والاختبار', p3_desc:'تنفيذ SDK/الاستعلامات/التقارير؛ تشغيل دفعات اختبار مع سجلات وخيارات تراجع.',
+        p4_title:'4) الإطلاق والمتابعة', p4_desc:'جدولة مهام دفعية (SFTP/CSV/XML)، تسليم الوثائق والدعم.',
+        faq_title:'الأسئلة الشائعة',
+        faq_q_int:'هل تتعامل مع تكاملات الشركات/الأنظمة لـ SAP B1؟',
+        faq_a_int:'نعم. استيراد/تصدير CSV/XML، مهام SFTP، ربط إلى الحقول/الجداول، ومعالجة دفعية آمنة مع التسجيل وإعادة المحاولة.',
+        faq_q4:'هل تعمل مع حزمة البلدان من coresuite؟',
+        faq_a4:'نعم. تصميم النماذج وملفات الطباعة وتعديلات السكربت وتخصيص التقارير.',
+        faq_q5:'هل يمكنك تحويل XML لقوائم FSM إلى B1 وإنشاء فواتير جماعية؟',
+        faq_a5:'نعم. قراءة XML إلى الحقول/الجداول، ربط القيم بالمستندات، وإنشاء الفواتير بالمعالجة الدُفعية.',
+        faq_q3:'هل تقدم تدريبات؟',
+        faq_a3:'نعم، تدريبات للمستخدمين وورش قصيرة لأساسيات SAP B1 وتقارير ولوحات FSM‑CRD.',
+        faq_q2:'ما نوع أعمال SAP B1 التي تقوم بها؟',
+        faq_a2:'إضافات باستخدام SDK (UI/DI API)، تقارير Crystal، تقارير coresuite/Boyum، واستعلامات SQL ونماذج البيانات.',
+        faq_q1:'هل تعمل عن بُعد وبأي لغات؟',
+        faq_a1:'نعم، عن بُعد داخل ألمانيا/الاتحاد الأوروبي. أعمل بالعربية والألمانية والإنجليزية.',
+        contact_title:'التواصل', disclaimer:'مستقل — غير تابع لشركة SAP SE.',
+        template_title:'قالب بريد للاستفسار',
+        template_hint:'انسخ القالب واملأ التفاصيل أو افتح بريدًا مُعبأ مسبقًا.',
+        template_copy_btn:'نسخ', template_copied:'تم النسخ!',
+        template_mail_btn:'فتح بريد مُعبأ'
+      },
+      'zh-CN': {
         nav_services:'服务', nav_process:'流程', nav_faq:'常见问题', nav_contact:'联系',
         tagline:'SAP Business One · SAP 现场服务管理',
         headline:'SAP B1 + FSM 自由职业者',
@@ -357,9 +525,91 @@
         faq_a4:'是的。提供布局、打印配置、脚本调整与报表定制。',
         faq_q5:'能否将 FSM 检查清单 XML 映射到 B1 并批量开票？',
         faq_a5:'可以。将 XML 解析到 UDF/表，映射到单据，并通过批处理生成发票。',
-        contact_title:'联系', disclaimer:'独立个人，非 SAP SE 旗下。'
+        contact_title:'联系', disclaimer:'独立个人，非 SAP SE 旗下。',
+        template_title:'询盘邮件模板',
+        template_hint:'复制此模板并填写，或打开已预填的邮件。',
+        template_copy_btn:'复制', template_copied:'已复制！',
+        template_mail_btn:'打开预填邮件'
       }
     };
+
+    // Inquiry templates for each language
+    const templates = {
+      en: [
+        'Your name:',
+        'Company:',
+        'Role:',
+        'HR / procurement contact (optional):',
+        'Language: EN / DE / AR',
+        'Project type: (Add-on SDK / Report / Integration / FSM CRD / coresuite / Boyum)',
+        'Scope / modules:',
+        'Data volume (approx):',
+        'B1 version (SQL/HANA):',
+        'Timeline / deadline:',
+        'Access (VPN / test system):',
+        'Budget / price (hourly / fixed):',
+        'Attachments: (XML/CSV samples, screenshots, field mapping)'
+      ].join('\n'),
+      de: [
+        'Ihr Name:',
+        'Firma:',
+        'Rolle:',
+        'HR / Einkauf (optional):',
+        'Sprache: DE / EN / AR',
+        'Projektart: (Add-on SDK / Reporting / Integration / FSM CRD / coresuite / Boyum)',
+        'Umfang / Module:',
+        'Datenmenge (ca.):',
+        'B1-Version (SQL/HANA):',
+        'Zeitplan / Deadline:',
+        'Zugang (VPN / Testsystem):',
+        'Budget / Preis (Stundensatz / Festpreis):',
+        'Anhänge: (XML/CSV-Beispiele, Screenshots, Feld-Mapping)'
+      ].join('\n'),
+      ar: [
+        'اسمك:',
+        'الشركة:',
+        'الوظيفة:',
+        'مسؤول الموارد البشرية / المشتريات (اختياري):',
+        'لغة التواصل: AR / DE / EN',
+        'نوع المشروع: (إضافة SDK / تقرير / تكامل / FSM CRD / coresuite / Boyum)',
+        'النطاق / الوحدات:',
+        'حجم البيانات (تقريبًا):',
+        'إصدار B1 (SQL/HANA):',
+        'الجدول الزمني / الموعد النهائي:',
+        'الوصول (VPN / نظام اختبار):',
+        'الميزانية / السعر (بالساعة / ثابت):',
+        'المرفقات: (عينات XML/CSV، لقطات شاشة، مخطط الحقول)'
+      ].join('\n'),
+      'zh-CN': [
+        '姓名：',
+        '公司：',
+        '职位：',
+        '人事/采购联系人（可选）：',
+        '沟通语言：EN / DE / AR',
+        '项目类型：（SDK 插件 / 报表 / 集成 / FSM CRD / coresuite / Boyum）',
+        '范围 / 模块：',
+        '数据量（约）：',
+        'B1 版本（SQL/HANA）：',
+        '时间计划 / 截止：',
+        '访问方式（VPN / 测试系统）：',
+        '预算 / 价格（时薪 / 固定）：',
+        '附件：（XML/CSV 示例、截图、字段映射）'
+      ].join('\n')
+    };
+
+    function setTemplate(lang){
+      const code = lang;
+      const ta = document.getElementById('inq-template');
+      if(!ta) return;
+      ta.value = templates[code] || templates.en;
+      ta.dir = (code === 'ar') ? 'rtl' : 'ltr';
+      const link = document.getElementById('mailto-prefill');
+      if(link){
+        const subj = 'SAP B1 / FSM Inquiry';
+        const body = ta.value;
+        link.href = 'mailto:SAPB1.Tarek.Fatal@outlook.com?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
+      }
+    }
 
     function applyLang(code){
       const normalized = code.toLowerCase().startsWith('zh') ? 'zh-CN' : code;
@@ -379,12 +629,26 @@
           l.href = canon + '?lang=' + lang;
         }
       });
+      setTemplate(normalized);
     }
 
+    // init
     const raw = (navigator.language || 'en');
     const initial = raw.toLowerCase().startsWith('zh') ? 'zh-CN' : raw.slice(0,2);
     applyLang(['en','de','ar','zh-CN'].includes(initial) ? initial : 'en');
+
+    // events
     document.querySelectorAll('.lang button').forEach(btn=> btn.addEventListener('click', ()=> applyLang(btn.dataset.lang)));
+    const copyBtn = document.getElementById('copy-template');
+    if(copyBtn){
+      copyBtn.addEventListener('click', async ()=>{
+        try{
+          await navigator.clipboard.writeText(document.getElementById('inq-template').value);
+          copyBtn.querySelector('span').textContent = (t[document.documentElement.lang]?.template_copied || 'Copied!');
+          setTimeout(()=>{ copyBtn.querySelector('span').textContent = (t[document.documentElement.lang]?.template_copy_btn || 'Copy'); }, 1200);
+        }catch(e){ /* ignore */ }
+      });
+    }
   </script>
 </body>
 </html>

@@ -28,18 +28,30 @@ const KNOWS_ABOUT = [
   'SAP Business One SDK',
   'SAP Business One DI API',
   'SAP Business One Service Layer',
-  'Crystal Reports',
   'SQL',
+  'Crystal Reports',
   'Data migration',
+  'ERP integration',
+  'DATEV',
   'SAP Field Service Management',
   'SAP S/4HANA',
-  'System integration',
+  'Business intelligence',
+  'KPI dashboards',
+  'XRechnung',
+  'EN 16931',
+  'Model Context Protocol (MCP)',
+  'AI agents',
   'Cloudflare',
   'Cloudflare Tunnel',
   'Cloudflare Workers',
   'Internet of Things',
+  'Leaflet',
+  'OpenStreetMap',
   'Angular',
+  'React',
   'React Native',
+  'Next.js',
+  '.NET',
 ];
 const FLOW_LABEL = {
   en: 'Diagram: data flowing between IoT devices, Cloudflare, SAP Field Service Management, SAP Business One and SAP S/4HANA',
@@ -63,6 +75,19 @@ const hl = (c) => c.hreflang || c.lang;
 
 const ICONS = {
   compass: '<circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36z"/>',
+  erp: '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/>',
+  pie: '<path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/>',
+  invoice: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/>',
+  ai: '<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z"/>',
+  map: '<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
+  monitor: '<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>',
+  search: '<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',
+  plug: '<path d="M12 22v-5M9 8V2M15 8V2M18 8v5a6 6 0 0 1-12 0V8z"/>',
+  wrench: '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/>',
+  network: '<rect x="9" y="2" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="16" y="16" width="6" height="6" rx="1"/><path d="M12 8v4M5 16v-2h14v2"/>',
+  target: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+  book: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5V21h16"/>',
+  rocket: '<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>',
   blocks: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M17.5 14v7M14 17.5h7"/>',
   chart: '<path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/>',
   swap: '<path d="M7 4 3 8l4 4"/><path d="M3 8h14"/><path d="m17 20 4-4-4-4"/><path d="M21 16H7"/>',
@@ -82,6 +107,7 @@ const ICONS = {
   ext: '<path d="M7 17 17 7M8 7h9v9"/>',
   moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
   sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>',
+  burger: '<path d="M4 7h16M4 12h16M4 17h16"/>',
   globe: '<circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
   calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
   award: '<circle cx="12" cy="8" r="6"/><path d="M15.48 12.89 17 22l-5-3-5 3 1.52-9.11"/>',
@@ -126,10 +152,10 @@ function flow(c) {
   const particle = (id, cls, dur, begin, reverse = false) =>
     `<circle r="3.2" class="${cls}"><animateMotion dur="${dur}s" begin="${begin}s" repeatCount="indefinite"${reverse ? ' keyPoints="1;0" keyTimes="0;1" calcMode="linear"' : ''}><mpath href="#${id}"/></animateMotion></circle>`;
   const node = ([x, y, t, s]) => {
-    const w = 196;
+    const w = 204;
     const left = X(x) - w / 2;
-    const led = rtl ? left + w - 22 : left + 22;
-    const tx = rtl ? left + w - 40 : left + 40;
+    const led = rtl ? left + w - 20 : left + 20;
+    const tx = rtl ? left + w - 36 : left + 36;
     const anchor = rtl ? 'end' : 'start';
     return `<g class="node"><rect x="${left}" y="${y - 33}" width="${w}" height="66" rx="16"/><circle class="led" cx="${led}" cy="${y - 6}" r="4.5"/><text class="t" x="${tx}" y="${y - 1}" text-anchor="${anchor}">${t}</text><text class="s" x="${tx}" y="${y + 18}" text-anchor="${anchor}">${s}</text></g>`;
   };
@@ -143,8 +169,8 @@ ${node(n.iot)}${node(n.cf)}${node(n.b1)}${node(n.s4)}
 }
 
 const headInit = `<script>(function(d){try{var t=localStorage.getItem('theme');if(t)d.dataset.theme=t}catch(e){}if(window.matchMedia&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&'IntersectionObserver' in window)d.classList.add('js')})(document.documentElement)</script>`;
-const themeScript = `var d=document.documentElement,b=document.getElementById('theme');function cur(){return d.dataset.theme||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}function sync(){b.setAttribute('aria-pressed',cur()==='dark')}sync();b.addEventListener('click',function(){var n=cur()==='dark'?'light':'dark';d.dataset.theme=n;try{localStorage.setItem('theme',n)}catch(e){}sync()});document.addEventListener('click',function(e){document.querySelectorAll('details.lang[open]').forEach(function(x){if(!x.contains(e.target))x.removeAttribute('open')})});`;
-const motionScript = `if(d.classList.contains('js')){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{rootMargin:'0px 0px -8% 0px',threshold:.12});document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});var co=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;co.unobserve(e.target);var el=e.target,end=+el.dataset.count,f=new Intl.NumberFormat(el.dataset.locale),t0=performance.now();(function s(t){var p=Math.min(1,(t-t0)/1600);el.textContent=f.format(Math.round(end*(1-Math.pow(1-p,3))));if(p<1)requestAnimationFrame(s)})(t0)})},{threshold:.6});document.querySelectorAll('[data-count]').forEach(function(el){el.textContent='0';co.observe(el)})}else{document.querySelectorAll('svg.flow').forEach(function(s){s.pauseAnimations&&s.pauseAnimations()})}`;
+const themeScript = `var d=document.documentElement,b=document.getElementById('theme');function cur(){return d.dataset.theme||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}function sync(){b.setAttribute('aria-pressed',cur()==='dark')}sync();b.addEventListener('click',function(){var n=cur()==='dark'?'light':'dark';d.dataset.theme=n;try{localStorage.setItem('theme',n)}catch(e){}sync()});document.addEventListener('click',function(e){document.querySelectorAll('details.lang[open],details.menu[open]').forEach(function(x){if(!x.contains(e.target)||e.target.closest('.menu a'))x.removeAttribute('open')})});`;
+const motionScript = `if(d.classList.contains('js')){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{rootMargin:'0px 0px -8% 0px',threshold:.12});document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});var co=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;co.unobserve(e.target);var el=e.target,end=+el.dataset.count,f=new Intl.NumberFormat(el.dataset.locale),t0=performance.now();(function s(t){var p=Math.min(1,(t-t0)/1600);el.textContent=f.format(Math.round(end*(1-Math.pow(1-p,3))));if(p<1)requestAnimationFrame(s)})(t0)})},{threshold:.6});document.querySelectorAll('[data-count]').forEach(function(el){el.textContent='0';co.observe(el)});setTimeout(function(){document.querySelectorAll('svg.flow').forEach(function(s){s.pauseAnimations&&s.pauseAnimations()});d.classList.add('still')},5000)}else{document.querySelectorAll('svg.flow').forEach(function(s){s.pauseAnimations&&s.pauseAnimations()})}`;
 
 function head({ c, title, description, path, depth, alternates, robots = 'index,follow', jsonld }) {
   const url = SITE + path;
@@ -181,7 +207,8 @@ ${LANGS.filter((l) => l !== c).map((l) => `<meta property="og:locale:alternate" 
 <meta name="twitter:title" content="${esc(title)}">
 <meta name="twitter:description" content="${esc(description)}">
 <meta name="twitter:image" content="${ogImg}">
-<meta name="theme-color" content="#071226">
+<meta name="theme-color" content="#f8f6f1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1522" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="${r}favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="${r}apple-touch-icon.png">
 ${headInit}
@@ -193,11 +220,21 @@ ${jsonld ? `<script type="application/ld+json">${JSON.stringify(jsonld)}</script
 function header(c, depth, { anchors = true, langLinks }) {
   const home = `${up(depth)}${c.lang}/`;
   const pre = anchors ? '' : home;
+  const LINKS = [
+    ['services', 'services'],
+    ['work', 'cases'],
+    ['packages', 'packages'],
+    ['about', 'about'],
+    ['faq', 'faq'],
+  ];
+  const menu = anchors
+    ? `<details class="menu"><summary class="icon-btn" aria-label="${esc(c.nav.menu)}">${icon('burger')}</summary><nav aria-label="${esc(c.nav.menu)}"><ul>${LINKS.map(([k, id]) => `<li><a href="#${id}">${esc(c.nav[k])}</a></li>`).join('')}<li><a href="#contact">${esc(c.nav.cta)}</a></li></ul></nav></details>`
+    : '';
   const nav = anchors
     ? `<nav class="nav" aria-label="${esc(c.nav.menu)}">${[
         ['services', 'services'],
         ['work', 'cases'],
-        ['pricing', 'pricing'],
+        ['packages', 'packages'],
         ['about', 'about'],
         ['faq', 'faq'],
       ]
@@ -209,6 +246,7 @@ function header(c, depth, { anchors = true, langLinks }) {
 ${brand(anchors ? '#top' : home)}
 ${nav}
 <div class="tools">
+${menu}
 <details class="lang"><summary class="icon-btn" aria-label="${esc(c.nav.language)}: ${esc(c.label)}">${icon('globe')}</summary><ul>
 ${langLinks
   .map(
@@ -243,7 +281,7 @@ function jsonLd(c) {
     '@graph': [
       { '@type': 'WebSite', '@id': `${SITE}#website`, url: SITE, name: BRAND, inLanguage: LANGS.map(hl), publisher: { '@id': org } },
       {
-        '@type': 'ProfessionalService',
+        '@type': 'Organization',
         '@id': org,
         name: BRAND,
         url: SITE,
@@ -258,14 +296,13 @@ function jsonLd(c) {
           { '@type': 'Country', name: 'Austria' },
           { '@type': 'Country', name: 'Switzerland' },
         ],
-        availableLanguage: ['de', 'en', 'ar'],
+        knowsLanguage: ['de', 'en', 'ar'],
         knowsAbout: KNOWS_ABOUT,
-        priceRange: 'from EUR 95/h',
         contactPoint: { '@type': 'ContactPoint', contactType: 'sales', email: EMAIL, availableLanguage: ['de', 'en', 'ar'] },
         hasOfferCatalog: {
           '@type': 'OfferCatalog',
           name: c.services.h2,
-          itemListElement: c.services.items.map((s) => ({
+          itemListElement: [...c.services.b1.items.map((s) => ({ ...s, group: c.services.b1.group })), ...c.services.items].map((s) => ({
             '@type': 'Offer',
             itemOffered: { '@type': 'Service', name: s.title, description: s.text, category: s.group, provider: { '@id': org } },
           })),
@@ -317,7 +354,7 @@ const alternatesHome = [...LANGS.map((l) => [hl(l), `${l.lang}/`]), ['x-default'
 function h1(text) {
   const nw = (t) => esc(t).replace('SAP Business One', '<span class="nw">SAP Business One</span>');
   const i = text.indexOf(' – ');
-  return i < 0 ? nw(text) : `${nw(text.slice(0, i))} – <em>${nw(text.slice(i + 3))}</em>`;
+  return i < 0 ? nw(text) : `${nw(text.slice(0, i))}&nbsp;– <em>${nw(text.slice(i + 3))}</em>`;
 }
 
 function shot(im, r, zoom, cls, sizes) {
@@ -342,7 +379,6 @@ function landing(c) {
 <body id="top">
 ${header(c, depth, { anchors: true, langLinks })}
 <main id="main">
-<div class="on-ink">
 <section class="hero" aria-labelledby="h1"><div class="wrap">
 <div class="hero-grid">
 <div>
@@ -357,11 +393,10 @@ ${header(c, depth, { anchors: true, langLinks })}
 <ul class="stats">${c.stats
     .map(
       (s) =>
-        `<li><strong${s.count ? ` data-count="${s.count}" data-locale="${c.numLocale}"` : ''}>${esc(s.text)}</strong><span>${esc(s.label)}</span></li>`
+        `<li><strong${s.count ? ` aria-hidden="true" data-count="${s.count}" data-locale="${c.numLocale}"` : ''}>${esc(s.text)}</strong>${s.count ? `<span class="sr-only">${esc(s.text)}</span>` : ''}<span>${esc(s.label)}</span></li>`
     )
     .join('')}</ul>
 </div></section>
-</div>
 
 <section id="audience" aria-labelledby="audience-h"><div class="wrap">
 <div class="section-head reveal"><h2 id="audience-h">${esc(c.audience.h2)}</h2><p>${esc(c.audience.intro)}</p></div>
@@ -372,10 +407,12 @@ ${header(c, depth, { anchors: true, langLinks })}
 
 <section id="services" class="alt" aria-labelledby="services-h"><div class="wrap">
 <div class="section-head reveal"><h2 id="services-h">${esc(c.services.h2)}</h2><p>${esc(c.services.intro)}</p></div>
-<div class="grid grid-3">${c.services.items
+<div class="grid grid-3"><article class="card feature reveal"><div class="card-icon">${icon('erp')}</div><p class="group">${esc(c.services.b1.group)}</p><h3>${esc(c.services.b1.title)}</h3><p>${esc(c.services.b1.text)}</p><ul class="sub">${c.services.b1.items
+    .map((s) => `<li>${icon(s.icon)}<div><b>${esc(s.title)}</b><span>${esc(s.text)}</span></div></li>`)
+    .join('')}</ul></article>${c.services.items
     .map(
       (s) =>
-        `<article class="card hover reveal${s.wide ? ' wide' : ''}"><div class="card-icon">${icon(s.icon)}</div><div><p class="group">${esc(s.group)}</p><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p></div></article>`
+        `<article class="card hover reveal"><div class="card-icon">${icon(s.icon)}</div><p class="group">${esc(s.group)}</p><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p></article>`
     )
     .join('')}</div>
 </div></section>
@@ -395,20 +432,21 @@ ${caseMedia(k.media, r, c.cases.zoom)}</article>`
 <div class="grid grid-3 proj">${c.projects.items
     .map(
       (p) =>
-        `<article class="card hover reveal"><div class="card-icon">${icon(p.icon)}</div><span class="tag">${esc(p.tag)}</span><h3>${esc(p.title)}</h3><p>${esc(p.text)}</p></article>`
-    )
-    .join('')}<article class="card cta-card reveal"><div><h3>${esc(c.projects.ctaTitle)}</h3><p>${esc(c.projects.ctaText)}</p></div><a class="btn btn-sm" href="${callHref}">${icon('calendar')} ${esc(c.hero.call)}</a></article></div>
-</div></section>
-
-<section id="pricing" class="alt" aria-labelledby="pricing-h"><div class="wrap">
-<div class="section-head reveal"><h2 id="pricing-h">${esc(c.pricing.h2)}</h2><p>${esc(c.pricing.intro)}</p></div>
-<div class="grid grid-3">${c.pricing.items
-    .map(
-      (p, i) =>
-        `<article class="card price reveal${i === 2 ? ' featured' : ''}">${i === 2 ? `<span class="badge-top">${esc(c.pricing.featured)}</span>` : ''}<h3>${esc(p.title)}</h3><p class="amount">${esc(p.price)}</p><p>${esc(p.text)}</p><a class="btn ${i === 2 ? 'btn-primary' : 'btn-ghost'} btn-sm" href="#contact">${esc(c.nav.cta)} ${icon('arrow', 'flip')}</a></article>`
+        `<article class="card hover reveal"><div class="card-icon">${icon(p.icon)}</div><span class="tag">${esc(p.tag)}</span><h3>${esc(p.title)}</h3><p>${esc(p.text)}</p>${p.tech && p.tech.length ? `<p class="tags">${p.tech.map((t) => `<span dir="ltr">${esc(t)}</span>`).join('')}</p>` : ''}</article>`
     )
     .join('')}</div>
-<p class="note">${esc(c.pricing.note)}</p>
+<div class="card cta-card cta-banner reveal"><div><h3>${esc(c.projects.ctaTitle)}</h3><p>${esc(c.projects.ctaText)}</p></div><a class="btn btn-primary" href="${callHref}">${icon('calendar')} ${esc(c.hero.call)}</a></div>
+</div></section>
+
+<section id="packages" class="alt" aria-labelledby="packages-h"><div class="wrap">
+<div class="section-head reveal"><h2 id="packages-h">${esc(c.packages.h2)}</h2><p>${esc(c.packages.intro)}</p></div>
+<div class="grid grid-4">${c.packages.items
+    .map(
+      (p) =>
+        `<article class="card hover pkg reveal"><div class="card-icon">${icon(p.icon)}</div><h3>${esc(p.title)}</h3><p>${esc(p.text)}</p><ul>${p.points.map((x) => `<li>${icon('tick')}<span>${esc(x)}</span></li>`).join('')}</ul><a class="btn btn-ghost btn-sm" href="mailto:${EMAIL}?subject=${encodeURIComponent(c.packages.subject + ': ' + p.title)}">${esc(c.packages.cta)} ${icon('arrow', 'flip')}</a></article>`
+    )
+    .join('')}</div>
+<p class="note">${esc(c.packages.note)}</p>
 </div></section>
 
 <section id="process" aria-labelledby="process-h"><div class="wrap">
@@ -430,7 +468,7 @@ ${c.about.paragraphs.map((p) => `<p>${esc(p)}</p>`).join('')}
 <p class="badge">${icon('award')}${esc(c.about.person.cert)}</p>
 <p class="bio">${esc(c.about.person.text)}</p>
 <p class="profiles"><a class="btn btn-ghost btn-sm" href="${SAME_AS[0]}" rel="me noopener" target="_blank">LinkedIn ${icon('ext')}</a><a class="btn btn-ghost btn-sm" href="${SAME_AS[1]}" rel="me noopener" target="_blank">freelancermap ${icon('ext')}</a></p>
-<a class="btn btn-primary" href="${callHref}">${icon('calendar')} ${esc(c.contact.call)}</a></aside>
+<a class="btn btn-primary" href="${callHref}">${icon('calendar')} ${esc(c.hero.call)}</a></aside>
 </div></section>
 
 <section id="faq" aria-labelledby="faq-h"><div class="wrap">
@@ -438,7 +476,7 @@ ${c.about.paragraphs.map((p) => `<p>${esc(p)}</p>`).join('')}
 <div class="faq">${c.faq.items.map((f, i) => `<details${i === 0 ? ' open' : ''}><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join('')}</div>
 </div></section>
 
-<div class="on-ink"><section id="contact" class="contact" aria-labelledby="contact-h"><div class="wrap contact-grid">
+<section id="contact" class="contact" aria-labelledby="contact-h"><div class="wrap contact-grid">
 <div><h2 id="contact-h">${esc(c.contact.h2)}</h2><p class="lead">${esc(c.contact.lead)}</p>
 <a class="btn btn-primary" href="${callHref}">${icon('calendar')} ${esc(c.contact.call)}</a>
 <p class="small">${esc(c.contact.emailLabel)}</p>
@@ -452,7 +490,7 @@ ${c.about.paragraphs.map((p) => `<p>${esc(p)}</p>`).join('')}
 <div><button class="btn btn-primary" type="submit">${icon('mail')} ${esc(c.contact.form.submit)}</button></div>
 <p class="note">${esc(c.contact.form.note)}</p>
 </form></div>
-</div></section></div>
+</div></section>
 </main>
 ${footer(c, depth)}
 <script>${themeScript}${motionScript}var f=document.getElementById('cf');f.addEventListener('submit',function(e){e.preventDefault();var g=function(n){return(f.elements[n].value||'').trim()},b=g('message')+'\\n\\n— '+g('name')+(g('company')?' · '+g('company'):'')+'\\n'+g('email');location.href='mailto:${EMAIL}?subject='+encodeURIComponent(f.dataset.subject+': '+g('name'))+'&body='+encodeURIComponent(b)});</script>
@@ -486,7 +524,7 @@ function chooser() {
 <body>
 <script>(function(){var m={de:'de',ar:'ar',zh:'zh',en:'en'},l=(navigator.languages||[navigator.language||'en']);for(var i=0;i<l.length;i++){var k=String(l[i]).slice(0,2).toLowerCase();if(m[k]){location.replace(m[k]+'/');return}}location.replace('en/')})();</script>
 ${header(c, 0, { anchors: false, langLinks })}
-<main id="main" class="on-ink"><div class="chooser"><div class="wrap">
+<main id="main" class="hero"><div class="chooser"><div class="wrap">
 <h1>${BRAND}</h1>
 <p class="lead">SAP Business One · SAP Field Service Management · Cloudflare &amp; IoT</p>
 <ul>${LANGS.map((l) => `<li><a class="btn btn-ghost" href="${l.lang}/" hreflang="${hl(l)}" lang="${l.htmlLang}">${esc(l.label)}</a></li>`).join('')}</ul>
@@ -500,7 +538,7 @@ ${footer(c, 0)}
 
 function notFound() {
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Page not found · ${BRAND}</title><meta name="robots" content="noindex">${headInit}<style>${cssSrc.replaceAll('__R__', '/')}</style></head>
-<body><main id="main" class="on-ink"><div class="chooser"><div class="wrap"><h1>404</h1><p class="lead">Page not found · Seite nicht gefunden · الصفحة غير موجودة · 页面未找到</p>
+<body><main id="main" class="hero"><div class="chooser"><div class="wrap"><h1>404</h1><p class="lead">Page not found · <span lang="de">Seite nicht gefunden</span> · <span lang="ar" dir="rtl">الصفحة غير موجودة</span> · <span lang="zh-Hans">页面未找到</span></p>
 <ul>${LANGS.map((l) => `<li><a class="btn btn-ghost" data-p="${l.lang}/" href="/${l.lang}/" lang="${l.htmlLang}">${esc(l.label)}</a></li>`).join('')}</ul></div></div></main>
 <script>var b=location.hostname.endsWith('github.io')?'/'+location.pathname.split('/')[1]+'/':'/';document.querySelectorAll('[data-p]').forEach(function(a){a.href=b+a.dataset.p})</script></body></html>
 `;
@@ -529,6 +567,8 @@ ${c.about.facts.map(([k, v]) => `- ${k}: ${v}`).join('\n')}
 ${c.audience.items.map((a) => `- ${a.title}: ${a.text}`).join('\n')}
 
 ## Services
+- ${c.services.b1.title} (${c.services.b1.group}): ${c.services.b1.text}
+${c.services.b1.items.map((s) => `  - ${s.title}: ${s.text}`).join('\n')}
 ${c.services.items.map((s) => `- ${s.title} (${s.group}): ${s.text}`).join('\n')}
 
 ## Case studies (demo data, no client names)
@@ -537,9 +577,8 @@ ${c.cases.items.map((k) => `### ${k.title}\n- Situation: ${k.situation}\n- Solut
 ## More projects
 ${c.projects.items.map((p) => `- ${p.title}: ${p.text}`).join('\n')}
 
-## Pricing
-${c.pricing.items.map((p) => `- ${p.title}: ${p.price}. ${p.text}`).join('\n')}
-- ${c.pricing.note}
+## Service packages (offer on request)
+${c.packages.items.map((p) => `- ${p.title}: ${p.text} (${p.points.join('; ')})`).join('\n')}
 
 ## How a project runs
 ${c.process.items.map((s, i) => `${i + 1}. ${s.title}: ${s.text}`).join('\n')}
@@ -569,7 +608,17 @@ const write = (p, s) => {
 };
 cpSync(join(ROOT, 'src/static'), OUT, { recursive: true });
 write('index.html', chooser());
-for (const c of LANGS) write(`${c.lang}/index.html`, landing(c));
+const NB = ' ';
+const KEEP = ['SAP Business One', 'SAP Field Service Management', 'SAP S/4HANA', 'SAP FSM', 'SAP B1', 'Crystal Reports', 'React Native', 'Cloudflare Tunnel', 'Service Layer', 'DI API', 'EN 16931'];
+// No line break inside product names, after Arabic "لـ" or before " – ". Only visible body text changes; tags, attributes and scripts stay as they are.
+const keep = (html) => {
+  const i = html.indexOf('<body');
+  return html.slice(0, i) + html.slice(i).replace(/(<script[\s\S]*?<\/script>)|>([^<]+)(?=<)/g, (m, s, t) =>
+    s ? s : '>' + KEEP.reduce((x, k) => x.replaceAll(k, k.replaceAll(' ', NB)), t).replaceAll(' – ', NB + '– ').replaceAll('لـ ', 'لـ' + NB))
+    // the hero h1 keeps normal spaces: its .nw span only stays unbroken from 360px up (320px reflow)
+    .replace(/<h1[\s\S]*?<\/h1>/, (h) => h.replaceAll(NB, ' '));
+};
+for (const c of LANGS) write(`${c.lang}/index.html`, keep(landing(c)));
 for (const p of legalPages(EMAIL)) write(`${p.path}index.html`, legal(p));
 write('404.html', notFound());
 write('sitemap.xml', sitemap());

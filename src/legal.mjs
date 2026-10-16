@@ -38,7 +38,7 @@ export function legalPages(email) {
       title: 'Imprint · TOF Solution',
       description: 'Legal notice (imprint) of TOF Solution, TOF Solution.',
       body: `<h1>Imprint</h1>
-<p>Information according to § 5 of the German Digital Services Act (DDG). The <a href="../../de/impressum/" hreflang="de" lang="de">German version</a> is legally binding.</p>
+<p>Information according to § 5 of the German Digital Services Act (DDG). The <a href="../../de/impressum/" hreflang="de">German version</a> is legally binding.</p>
 <h2>Provider</h2>
 <address>${addrEn}</address>
 <h2>Contact</h2>
@@ -83,7 +83,7 @@ export function legalPages(email) {
       title: 'Privacy policy · TOF Solution',
       description: 'Privacy policy of tarekfatal.com.',
       body: `<h1>Privacy policy</h1>
-<p>Last updated: October 2026. The <a href="../../de/datenschutz/" hreflang="de" lang="de">German version</a> is legally binding.</p>
+<p>Last updated: October 2026. The <a href="../../de/datenschutz/" hreflang="de">German version</a> is legally binding.</p>
 <h2>1. Controller</h2>
 <address>${addrEn}<br>Email: ${mail}</address>
 <h2>2. Summary</h2>

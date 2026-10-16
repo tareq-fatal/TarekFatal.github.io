@@ -20,21 +20,21 @@ const mark = (s) => `<svg width="${s}" height="${s}" viewBox="0 0 36 36"><defs><
 
 const og = (c) => `<!doctype html><html lang="${c.htmlLang}" dir="${c.dir}"><head><meta charset="utf-8"><style>${faces}
 *{margin:0;box-sizing:border-box}html{overflow:hidden;width:1200px;height:630px}
-body{width:1200px;height:630px;background:#071226;color:#eef3fb;font-family:${c.lang === 'ar' ? '"Plex Arabic",Plex' : c.lang === 'zh' ? 'Plex,"Microsoft YaHei"' : 'Plex'},sans-serif;padding:76px 84px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
-body::before{content:"";position:absolute;inset:0;background:radial-gradient(700px 420px at ${c.dir === 'rtl' ? '10%' : '90%'} 0%,rgba(47,107,234,.45),transparent 65%),radial-gradient(600px 400px at ${c.dir === 'rtl' ? '95%' : '5%'} 110%,rgba(25,195,177,.22),transparent 65%)}
-body::after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:60px 60px;-webkit-mask-image:radial-gradient(ellipse 80% 80% at 50% 30%,#000,transparent 75%)}
+body{width:1200px;height:630px;background:#f8f6f1;color:#1d2433;font-family:${c.lang === 'ar' ? '"Plex Arabic",Plex' : c.lang === 'zh' ? 'Plex,"Microsoft YaHei"' : 'Plex'},sans-serif;padding:76px 84px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+body::before{content:"";position:absolute;inset:0;background:radial-gradient(760px 460px at ${c.dir === 'rtl' ? '10%' : '90%'} 0%,#e2eafa,transparent 65%),radial-gradient(640px 420px at ${c.dir === 'rtl' ? '95%' : '5%'} 110%,#dff0ea,transparent 65%)}
+body::after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(29,36,51,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(29,36,51,.05) 1px,transparent 1px);background-size:60px 60px;-webkit-mask-image:radial-gradient(ellipse 80% 80% at 50% 30%,#000,transparent 75%)}
 .top,.h,.tags{position:relative;z-index:1}
 .top{display:flex;align-items:center;gap:20px;font:600 34px Plex,sans-serif;direction:ltr;${c.dir === 'rtl' ? 'justify-content:flex-end' : ''}}
-.top i{font-style:normal;color:#b4c0d4;font-weight:500}
+.top i{font-style:normal;color:#525b6a;font-weight:500}
 .h{font-size:${c.lang === 'zh' ? 60 : c.lang === 'ar' ? 62 : 66}px;line-height:1.2;font-weight:600;letter-spacing:${c.lang === 'en' || c.lang === 'de' ? '-.02em' : '0'};max-width:1000px}
-.h span{background:linear-gradient(90deg,#9cc0ff,#6fe6d8);-webkit-background-clip:text;color:transparent}
+.h span{background:linear-gradient(90deg,#2a58c2,#12877b);-webkit-background-clip:text;color:transparent}
 .tags{display:flex;gap:14px;flex-wrap:wrap;direction:ltr;${c.dir === 'rtl' ? 'justify-content:flex-end' : ''}}
-.tags b{border:1.5px solid rgba(255,255,255,.18);background:rgba(255,255,255,.04);border-radius:999px;padding:10px 22px;font:500 24px Plex,sans-serif;color:#c9d4e6}
+.tags b{border:1.5px solid #d4cdbf;background:#fffdf9;border-radius:999px;padding:10px 22px;font:500 24px Plex,sans-serif;color:#3a4252}
 </style></head><body><div class="top">${mark(64)}<div><b>TOF</b> <i>Solution</i></div></div>
 <div class="h">${c.tagline.replace(/(SAP FSM)/, '<span>$1</span>')}</div>
 <div class="tags"><b>SAP Business One</b><b>SAP FSM</b><b>S/4HANA</b><b>Cloudflare</b><b>IoT</b></div></body></html>`;
 
-const iconPage = `<!doctype html><html><body style="margin:0;width:180px;height:180px;background:#071226;display:grid;place-items:center">${mark(180)}</body></html>`;
+const iconPage = `<!doctype html><html><body style="margin:0;width:180px;height:180px;background:#f8f6f1;display:grid;place-items:center">${mark(180)}</body></html>`;
 
 const browser = await chromium.launch({ executablePath: chrome });
 const page = await browser.newPage({ viewport: { width: 1200, height: 630 } });

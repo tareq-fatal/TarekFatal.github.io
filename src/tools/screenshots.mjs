@@ -9,6 +9,7 @@ for (const lang of ['en', 'de', 'ar', 'zh']) for (const [name, viewport, dpr] of
   const ctx = await browser.newContext({ viewport, deviceScaleFactor: dpr, colorScheme: scheme, isMobile: name === 'mobile', hasTouch: name === 'mobile' });
   const p = await ctx.newPage();
   await p.goto(base + lang + '/', { waitUntil: 'networkidle' });
+  await p.evaluate(async () => { document.querySelectorAll('img[loading=lazy]').forEach((i) => (i.loading = 'eager')); await Promise.race([Promise.all([...document.images].map((i) => i.complete ? 0 : new Promise((r) => { i.onload = i.onerror = r; }))), new Promise((r) => setTimeout(r, 5000))]); });
   const overflow = await p.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   await p.screenshot({ path: `${out}/${lang}-${name}-${scheme}.png`, fullPage: true });
   console.log(lang, name, scheme, 'horizontal overflow px:', overflow);

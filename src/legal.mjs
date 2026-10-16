@@ -1,10 +1,12 @@
-// Impressum / Datenschutz (DE + EN). Missing data is marked with <mark class="todo">.
-const todo = (t) => `<mark class="todo">[${t}]</mark>`;
+// Impressum / Datenschutz (DE + EN).
+// TODO(TOF): Anschrift fehlt noch – ADDRESS_DE/ADDRESS_EN befüllen (z. B. 'Musterstraße 1<br>12345 Musterstadt'), dann entfällt der Hinweis.
+const ADDRESS_DE = '';
+const ADDRESS_EN = '';
 
 export function legalPages(email) {
   const mail = `<a class="ltr" href="mailto:${email}">${email}</a>`;
-  const addrDe = `TOF Solution<br>TOF Solution<br>${todo('PLATZHALTER: Straße und Hausnummer')}<br>${todo('PLATZHALTER: PLZ und Ort')}<br>Deutschland`;
-  const addrEn = `TOF Solution<br>TOF Solution<br>${todo('PLACEHOLDER: street and house number')}<br>${todo('PLACEHOLDER: postcode and city')}<br>Germany`;
+  const addrDe = `TOF Solution<br>TOF Solution<br>${ADDRESS_DE ? ADDRESS_DE + '<br>' : ''}Deutschland${ADDRESS_DE ? '' : '<br><em>Die vollständige Anschrift wird in Kürze ergänzt.</em>'}`;
+  const addrEn = `TOF Solution<br>TOF Solution<br>${ADDRESS_EN ? ADDRESS_EN + '<br>' : ''}Germany${ADDRESS_EN ? '' : '<br><em>The full postal address will be added shortly.</em>'}`;
   const imprintPair = [['de', 'de/impressum/'], ['en', 'en/imprint/']];
   const privacyPair = [['de', 'de/datenschutz/'], ['en', 'en/privacy/']];
   const github =
@@ -24,8 +26,6 @@ export function legalPages(email) {
 <address>${addrDe}</address>
 <h2>Kontakt</h2>
 <p>E-Mail: ${mail}</p>
-<h2>Umsatzsteuer</h2>
-<p>Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: ${todo('PLATZHALTER: USt-IdNr. – falls nicht vorhanden, Abschnitt entfernen')}</p>
 <h2>Verbraucherstreitbeilegung</h2>
 <p>Ich bin nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
 <h2>Haftung für Links</h2>
@@ -43,8 +43,6 @@ export function legalPages(email) {
 <address>${addrEn}</address>
 <h2>Contact</h2>
 <p>Email: ${mail}</p>
-<h2>VAT</h2>
-<p>VAT identification number according to § 27a UStG: ${todo('PLACEHOLDER: VAT ID – remove this section if none')}</p>
 <h2>Consumer dispute resolution</h2>
 <p>I am neither willing nor obliged to participate in dispute resolution proceedings before a consumer arbitration board.</p>
 <h2>Liability for links</h2>

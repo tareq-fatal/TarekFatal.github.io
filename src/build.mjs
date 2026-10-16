@@ -16,6 +16,8 @@ const EMAIL = 'Tarek@tarekfatal.com';
 const LANGS = [en, de, ar, zh];
 const TODAY = new Date().toISOString().slice(0, 10);
 const YEAR = TODAY.slice(0, 4);
+// Portrait: set to e.g. 'img/TOF.webp' (square, ≥224px) once a photo exists; until then initials are shown.
+const PHOTO = null;
 const SAME_AS = [
   'https://www.linkedin.com/in/tof-solution/',
   'https://www.freelancermap.de/profil/tof-solution',
@@ -62,6 +64,10 @@ const ICONS = {
   moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
   sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>',
   globe: '<circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
+  users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+  server: '<rect x="2" y="3" width="20" height="8" rx="2"/><rect x="2" y="13" width="20" height="8" rx="2"/><path d="M6 7h.01M6 17h.01"/>',
+  calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+  award: '<circle cx="12" cy="8" r="6"/><path d="M15.48 12.89 17 22l-5-3-5 3 1.52-9.11"/>',
   mail: '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/>',
 };
 const icon = (name, cls = '') =>
@@ -132,7 +138,7 @@ ${jsonld ? `<script type="application/ld+json">${JSON.stringify(jsonld)}</script
 function header(c, depth, { anchors = true, langLinks }) {
   const pre = anchors ? '' : `${up(depth)}${c.lang}/`;
   const nav = anchors
-    ? `<nav class="nav" aria-label="${esc(c.nav.menu)}">${['services', 'projects', 'process', 'about', 'faq']
+    ? `<nav class="nav" aria-label="${esc(c.nav.menu)}">${['services', 'cases', 'pricing', 'about', 'faq']
         .map((k) => `<a href="${pre}#${k}">${esc(c.nav[k])}</a>`)
         .join('')}</nav>`
     : '';
@@ -210,6 +216,7 @@ function jsonLd(c) {
         areaServed: [{ '@type': 'Country', name: 'Germany' }, { '@type': 'Place', name: 'Remote' }],
         availableLanguage: ['de', 'en', 'ar'],
         knowsAbout: KNOWS_ABOUT,
+        priceRange: 'from EUR 95/h',
         hasOfferCatalog: {
           '@type': 'OfferCatalog',
           name: c.services.h2,
@@ -267,44 +274,82 @@ ${header(c, depth, { anchors: true, langLinks })}
 <p class="eyebrow"><span class="dot" aria-hidden="true"></span>${esc(c.hero.eyebrow)}</p>
 <h1 id="h1">${esc(c.hero.h1)}</h1>
 <p class="lead">${esc(c.hero.lead)}</p>
-<div class="cta-row"><a class="btn btn-primary" href="#contact">${esc(c.hero.cta)} ${icon('arrow', 'arrow')}</a><a class="btn btn-ghost" href="#projects">${esc(c.hero.secondary)}</a></div>
+<div class="cta-row"><a class="btn btn-primary" href="#contact">${esc(c.hero.cta)} ${icon('arrow', 'arrow')}</a><a class="btn btn-ghost" href="#cases">${esc(c.hero.secondary)}</a></div>
 <ul class="facts">${c.hero.facts.map(([n, t]) => `<li><strong>${esc(n)}</strong><span>${esc(t)}</span></li>`).join('')}</ul>
 </div>
 <div>${diagram(c)}</div>
 </div></section>
 
+<section id="audience" class="alt tight" aria-labelledby="audience-h"><div class="wrap">
+<div class="section-head"><h2 id="audience-h">${esc(c.audience.h2)}</h2></div>
+<div class="grid grid-3">${c.audience.items
+    .map((a, i) => `<article class="card"><div class="card-icon">${icon(['fsm', 'users', 'server'][i])}</div><h3>${esc(a.title)}</h3><p>${esc(a.text)}</p></article>`)
+    .join('')}</div>
+</div></section>
+
 <section id="services" aria-labelledby="services-h"><div class="wrap">
 <div class="section-head"><h2 id="services-h">${esc(c.services.h2)}</h2><p>${esc(c.services.intro)}</p></div>
-<div class="grid grid-2">${c.services.items
+<div class="grid grid-3">${c.services.items
     .map((s) => `<article class="card"><div class="card-icon">${icon(s.icon)}</div><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p></article>`)
     .join('')}</div>
 </div></section>
 
-<section id="projects" class="alt" aria-labelledby="projects-h"><div class="wrap">
-<div class="section-head"><h2 id="projects-h">${esc(c.projects.h2)}</h2><p>${esc(c.projects.intro)}</p></div>
-<div class="grid grid-3">${c.projects.items
+<section id="cases" class="alt" aria-labelledby="cases-h"><div class="wrap">
+<div class="section-head"><h2 id="cases-h">${esc(c.cases.h2)}</h2><p>${esc(c.cases.intro)}</p></div>
+<div class="cases">${c.cases.items
     .map(
-      (p) => `<article class="card"><span class="tag">${esc(p.tag)}</span><h3>${esc(p.title)}</h3><p>${esc(p.text)}</p><div class="result-wrap"><p class="result">${icon('check')}<span><span class="sr-only">${esc(c.projects.resultLabel)}: </span>${esc(p.result)}</span></p>${
-        p.link
-          ? `<a class="more" href="${p.link}" rel="noopener" target="_blank">${esc(p.linkLabel)} ${icon('ext')}</a>`
-          : ''
-      }</div></article>`
+      (k) => `<article class="card case"><div><span class="tag">${esc(k.tag)}</span><h3>${esc(k.title)}</h3><dl class="sar">
+<dt>${esc(c.cases.labels.situation)}</dt><dd>${esc(k.situation)}</dd>
+<dt>${esc(c.cases.labels.solution)}</dt><dd>${esc(k.solution)}</dd>
+<dt>${esc(c.cases.labels.result)}</dt><dd class="result">${icon('check')}<span>${esc(k.result)}</span></dd></dl></div>
+<div class="shots">${k.images
+        .map(
+          (im) => `<figure><a href="${r}img/${im.src}-1200.webp" title="${esc(c.cases.zoom)}"><img src="${r}img/${im.src}-640.webp" srcset="${r}img/${im.src}-640.webp 640w, ${r}img/${im.src}-1200.webp 1200w" sizes="(min-width:1000px) 600px, calc(100vw - 72px)" width="${im.w}" height="${im.h}" alt="${esc(im.alt)}" loading="lazy" decoding="async"></a><figcaption>${esc(im.caption)}</figcaption></figure>`
+        )
+        .join('')}</div></article>`
+    )
+    .join('')}</div>
+<h3 class="sub-h">${esc(c.projects.h2)}</h3>
+<div class="grid grid-2">${c.projects.items
+    .map(
+      (p) => `<article class="card"><span class="tag">${esc(p.tag)}</span><h3>${esc(p.title)}</h3><p>${esc(p.text)}</p><div class="result-wrap"><p class="result">${icon('check')}<span><span class="sr-only">${esc(c.projects.resultLabel)}: </span>${esc(p.result)}</span></p></div></article>`
     )
     .join('')}</div>
 </div></section>
 
-<section id="process" aria-labelledby="process-h"><div class="wrap">
+<section id="pricing" aria-labelledby="pricing-h"><div class="wrap">
+<div class="section-head"><h2 id="pricing-h">${esc(c.pricing.h2)}</h2><p>${esc(c.pricing.intro)}</p></div>
+<div class="grid grid-3">${c.pricing.items
+    .map((p, i) => `<article class="card price${i === 2 ? ' featured' : ''}"><h3>${esc(p.title)}</h3><p class="amount">${esc(p.price)}</p><p>${esc(p.text)}</p></article>`)
+    .join('')}</div>
+<p class="note" style="margin-top:1rem">${esc(c.pricing.note)}</p>
+</div></section>
+
+<section id="process" class="alt" aria-labelledby="process-h"><div class="wrap">
 <div class="section-head"><h2 id="process-h">${esc(c.process.h2)}</h2></div>
 <ol class="steps grid grid-3">${c.process.items
     .map((s) => `<li class="card"><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p></li>`)
     .join('')}</ol>
 </div></section>
 
-<section id="about" class="alt" aria-labelledby="about-h"><div class="wrap about-grid">
-<div><h2 id="about-h">${esc(c.about.h2)}</h2>${c.about.paragraphs.map((p) => `<p>${esc(p)}</p>`).join('')}</div>
+<section id="about" aria-labelledby="about-h"><div class="wrap about-grid">
+<div>
+<div class="person">${
+    PHOTO
+      ? `<img class="portrait" src="${r}${PHOTO}" width="112" height="112" alt="${esc(c.about.photoAlt)}">`
+      : `<div class="portrait" role="img" aria-label="${esc(c.about.photoAlt)}">TF</div>`
+  }<div><h2 id="about-h">${esc(c.about.h2)}</h2><p class="badge">${icon('award')}${esc(c.about.cert)}</p></div></div>
+${c.about.paragraphs.map((p) => `<p>${esc(p)}</p>`).join('')}
+<p class="profiles"><span>${esc(c.about.profiles)}:</span> <a class="btn btn-ghost btn-sm" href="${SAME_AS[0]}" rel="me noopener" target="_blank">LinkedIn ${icon('ext')}</a> <a class="btn btn-ghost btn-sm" href="${SAME_AS[1]}" rel="me noopener" target="_blank">freelancermap ${icon('ext')}</a></p>
+</div>
 <aside class="facts-box" aria-labelledby="facts-h"><h3 id="facts-h">${esc(c.about.factsTitle)}</h3><dl>${c.about.facts
     .map(([k, v]) => `<dt>${esc(k)}</dt><dd>${v.includes('@') ? `<a class="ltr" href="mailto:${EMAIL}">${EMAIL}</a>` : esc(v)}</dd>`)
     .join('')}</dl></aside>
+</div></section>
+
+<section id="more" class="alt tight" aria-labelledby="more-h"><div class="wrap">
+<h2 id="more-h" class="small-h">${esc(c.more.h2)}</h2>
+<ul class="more-list">${c.more.items.map((m) => `<li><strong>${esc(m.title)}</strong> – ${esc(m.text)}</li>`).join('')}</ul>
 </div></section>
 
 <section id="faq" aria-labelledby="faq-h"><div class="wrap">
@@ -317,6 +362,7 @@ ${header(c, depth, { anchors: true, langLinks })}
 <section id="contact" aria-labelledby="contact-h"><div class="wrap">
 <div class="contact-box">
 <div><h2 id="contact-h">${esc(c.contact.h2)}</h2><p class="lead">${esc(c.contact.lead)}</p>
+<p><a class="btn btn-ghost" href="mailto:${EMAIL}?subject=${encodeURIComponent(c.contact.callSubject)}&amp;body=${encodeURIComponent(c.contact.callBody)}">${icon('calendar')} ${esc(c.contact.call)}</a></p>
 <p style="margin:0 0 .4rem;color:var(--muted)">${esc(c.contact.emailLabel)}</p>
 <a class="mail ltr" href="mailto:${EMAIL}?subject=${encodeURIComponent(c.contact.form.subject)}">${EMAIL}</a></div>
 <form class="form" id="cf" data-subject="${esc(c.contact.form.subject)}">
@@ -414,11 +460,24 @@ function llms() {
 ## Key facts
 ${c.about.facts.map(([k, v]) => `- ${k}: ${v}`).join('\n')}
 
+## Who I work with
+${c.audience.items.map((a) => `- ${a.title}: ${a.text}`).join('\n')}
+
 ## Services
 ${c.services.items.map((s) => `- ${s.title}: ${s.text}`).join('\n')}
 
-## Selected projects (no client names)
-${c.projects.items.map((p) => `- ${p.title}: ${p.text} Result: ${p.result}${p.link ? ` Demo: ${p.link}` : ''}`).join('\n')}
+## Case studies (demo data, no client names)
+${c.cases.items.map((k) => `### ${k.title}\n- Situation: ${k.situation}\n- Solution: ${k.solution}\n- Result: ${k.result}`).join('\n\n')}
+
+## More SAP & integration projects
+${c.projects.items.map((p) => `- ${p.title}: ${p.text} Result: ${p.result}`).join('\n')}
+
+## Pricing
+${c.pricing.items.map((p) => `- ${p.title}: ${p.price}. ${p.text}`).join('\n')}
+- ${c.pricing.note}
+
+## Other work
+${c.more.items.map((m) => `- ${m.title}: ${m.text}`).join('\n')}
 
 ## How a project starts
 ${c.process.items.map((s, i) => `${i + 1}. ${s.title}: ${s.text}`).join('\n')}

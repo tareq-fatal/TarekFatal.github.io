@@ -74,9 +74,9 @@ export default {
   },
   cases: {
     h2: '项目详解',
-    intro: '精选项目，以演示数据展示，客户名称已做模糊处理。',
+    intro: '精选项目，基于演示数据——插图仅为示意，不含任何客户数据。',
     labels: { situation: '背景', solution: '方案', result: '成果' },
-    zoom: '查看原图',
+    artLabel: '示意图',
     items: [
       {
         tag: 'SAP FSM',
@@ -84,10 +84,7 @@ export default {
         situation: '大型检查清单模板（演示中为 10 个章节、230 多个字段）若在 SAP FSM 中手工维护和导入，既费时又容易出错。',
         solution: '在生成器中通过拖放创建章节和字段（文本、选项、是/否、数字、照片、条码、签名、设备卡片），并进行版本管理和校验。一键即可导出符合 SAP FSM 导入格式的 ZIP 文件。',
         result: '包含 10 个章节、237 个字段的模板被导出为带版本号、可直接导入的 ZIP 文件，无需在 SAP FSM 中手工补录。',
-        media: {
-          main: { src: 'case-builder', w: 1200, h: 717, alt: '检查清单生成器：字段类型与模板章节（演示数据，德语界面）' },
-          second: { src: 'case-export', w: 1200, h: 717, alt: '导出至 SAP FSM 的对话框，含版本号和下载 ZIP 按钮（德语界面）' },
-        },
+        art: 'builder',
       },
       {
         tag: 'SAP FSM · IoT',
@@ -95,10 +92,7 @@ export default {
         situation: '现场技术人员需要一款应用，把工单、设备状态和检查清单整合在一起，并将数据直接写入 SAP FSM。',
         solution: '基于 Angular 和 Cloudflare Workers 的 Web 应用：按站点显示物联网设备实时状态，支持双因素登录、二维码和 DataMatrix 扫描，引导式检查清单直接进入 SAP FSM；另配管理界面，提供概览和关键指标。',
         result: '设备反馈数秒即达；提交的单据以“已进入 SAP FSM”状态显示。',
-        media: {
-          main: { src: 'case-fsapp', w: 1200, h: 750, alt: '管理概览，显示关键指标和“已进入 SAP FSM”状态的单据（演示数据，德语界面）' },
-          phone: { src: 'case-fsapp-phone', w: 720, h: 1440, alt: '移动端工单概览，显示无线接收“4/5 台设备已接收”（演示数据，德语界面）' },
-        },
+        art: 'fsapp',
       },
       {
         tag: '负载测试',
@@ -106,9 +100,7 @@ export default {
         situation: '在技术人员日常向 SAP FSM 提交带照片和签名的检查清单之前，必须证明在高负载和异常情况下提交依然可靠。',
         solution: '模拟技术人员通过与真实应用相同的路径提交含照片、签名和设备明细的检查清单；测试场景包括上传途中断网、重复提交、两名技术人员处理同一工单以及模拟的 SAP 错误。测试仅在演示租户中进行。',
         result: '负载测试中处理 10,000 份检查清单，零错误。',
-        media: {
-          main: { src: 'case-belege', w: 1200, h: 495, alt: '单据概览，显示技术人员、来源和“已进入 SAP FSM”状态（演示数据，德语界面）' },
-        },
+        art: 'load',
       },
     ],
   },
@@ -123,7 +115,7 @@ export default {
       { icon: 'pie', tag: '自研', title: 'Excel Analytics Desktop', text: '离线 Excel 与 CSV 分析桌面应用：导入 SQLite、数据浏览、数据透视表、图表和 SQL 编辑器——支持英语、德语和阿拉伯语。', tech: ['.NET', 'WPF', 'Blazor Hybrid', 'SQLite'] },
       { icon: 'kanban', tag: '自研 · 已上线', title: '项目与任务管理平台', text: '多租户平台：Kanban、Scrum、甘特图、路线图、报表、Planner 同步、单点登录，以及供 AI 智能体使用的安全 MCP 接口。', tech: ['Next.js', 'PostgreSQL', 'MCP', 'Android'] },
       { icon: 'wrench', tag: '原型', title: 'WerkstattPilot——汽修厂 ERP', text: '面向汽修厂的 ERP 及客户应用：预约、工单、PDF 发票、配件库存和商城——三语界面，含阿拉伯语。', tech: ['Next.js', 'Expo', 'Supabase'] },
-      { icon: 'phone', tag: '移动应用', title: '社区平台移动应用', text: '支持阿拉伯语和英语，324 项自动化测试，iOS 与 Android 版本已构建，即将上架应用商店。', tech: ['React Native', 'Expo', 'Supabase'] },
+      { icon: 'phone', tag: '移动应用 · 开发中', title: '社区平台移动应用', text: '支持阿拉伯语和英语，324 项自动化测试，iOS 与 Android 版本已构建。', tech: ['React Native', 'Expo', 'Supabase'] },
       { icon: 'landmark', tag: '电子政务', title: '电子政务原型', text: '带在线拍卖功能的公众服务平台可交互原型：身份核验、竞价逻辑、可检测篡改的哈希链审计日志和管理后台。', tech: ['React', 'Vite', 'Web Crypto'] },
     ],
     ctaTitle: '下一个项目是您的吗？',

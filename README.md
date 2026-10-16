@@ -6,7 +6,6 @@ Static, dependency-free site for TOF Solution (SAP Business One, SAP Field Servi
 - Content: `src/content/*.mjs` · legal pages: `src/legal.mjs` · styles: `src/styles.css` (inlined at build)
 - Fonts: IBM Plex Sans + IBM Plex Sans Arabic, self-hosted in `src/static/fonts` (SIL OFL 1.1)
 - Build: `node src/build.mjs` → `dist/`; `node src/tools/check-terms.mjs dist` blocks forbidden terms (runs in CI)
-- Case-study screenshots: `node src/tools/prepare-shots.mjs <dir>` (crop + pixelate client names → `src/static/img`)
 - OG images / touch icon: `node src/tools/render-images.mjs` (playwright-core + local Chrome)
 - Screenshots: `node src/tools/screenshots.mjs <base-url>` → `.lighthouse/shots`
 - Portrait: set `PHOTO` in `src/build.mjs` once a photo exists

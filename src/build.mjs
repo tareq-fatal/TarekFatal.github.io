@@ -8,6 +8,7 @@ import de from './content/de.mjs';
 import ar from './content/ar.mjs';
 import zh from './content/zh.mjs';
 import { legalPages } from './legal.mjs';
+import { caseArt } from './art.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = join(ROOT, 'dist');
@@ -357,19 +358,6 @@ function h1(text) {
   return i < 0 ? nw(text) : `${nw(text.slice(0, i))}&nbsp;– <em>${nw(text.slice(i + 3))}</em>`;
 }
 
-function shot(im, r, zoom, cls, sizes) {
-  const sm = im.w >= 1200 ? 640 : im.w / 2;
-  return `<a href="${r}img/${im.src}-${im.w}.webp" title="${esc(zoom)}"><img src="${r}img/${im.src}-${sm}.webp" srcset="${r}img/${im.src}-${sm}.webp ${sm}w, ${r}img/${im.src}-${im.w}.webp ${im.w}w" sizes="${sizes}" width="${im.w}" height="${im.h}" alt="${esc(im.alt)}" loading="lazy" decoding="async"></a>`;
-}
-function caseMedia(m, r, zoom) {
-  const browser = (im, cls, sizes) =>
-    `<div class="browser ${cls}"><div class="chrome" aria-hidden="true"><i></i><i></i><i></i><b></b></div>${shot(im, r, zoom, cls, sizes)}</div>`;
-  const solo = !m.second && !m.phone;
-  return `<div class="case-media${solo ? ' solo' : ''}${m.phone ? ' has-phone' : ''}">${browser(m.main, 'main', '(min-width:1040px) 620px, 92vw')}${
-    m.second ? browser(m.second, 'second', '(min-width:1040px) 400px, 60vw') : ''
-  }${m.phone ? `<div class="phone">${shot(m.phone, r, zoom, 'phone', '(min-width:1040px) 180px, 30vw')}</div>` : ''}</div>`;
-}
-
 function landing(c) {
   const depth = 1;
   const r = up(depth);
@@ -425,7 +413,7 @@ ${header(c, depth, { anchors: true, langLinks })}
 <dt>${esc(c.cases.labels.situation)}</dt><dd>${esc(k.situation)}</dd>
 <dt>${esc(c.cases.labels.solution)}</dt><dd>${esc(k.solution)}</dd>
 <dt>${esc(c.cases.labels.result)}</dt><dd class="result">${icon('check')}<span>${esc(k.result)}</span></dd></dl></div>
-${caseMedia(k.media, r, c.cases.zoom)}</article>`
+${caseArt(k.art, c, k.title)}</article>`
     )
     .join('')}</div>
 <div class="section-head reveal more-h"><h2 id="more-h">${esc(c.projects.h2)}</h2><p>${esc(c.projects.intro)}</p></div>
@@ -575,7 +563,7 @@ ${c.services.items.map((s) => `- ${s.title} (${s.group}): ${s.text}`).join('\n')
 ${c.cases.items.map((k) => `### ${k.title}\n- Situation: ${k.situation}\n- Solution: ${k.solution}\n- Result: ${k.result}`).join('\n\n')}
 
 ## More projects
-${c.projects.items.map((p) => `- ${p.title}: ${p.text}`).join('\n')}
+${c.projects.items.map((p) => `- ${p.title} (${p.tag}): ${p.text}`).join('\n')}
 
 ## Service packages (offer on request)
 ${c.packages.items.map((p) => `- ${p.title}: ${p.text} (${p.points.join('; ')})`).join('\n')}

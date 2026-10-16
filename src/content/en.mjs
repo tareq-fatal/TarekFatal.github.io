@@ -73,9 +73,9 @@ export default {
   },
   cases: {
     h2: 'Projects in detail',
-    intro: 'Selected work, shown with demo data. Client names are blurred.',
+    intro: 'Selected work with demo data – the illustrations are schematic and contain no client data.',
     labels: { situation: 'Situation', solution: 'Solution', result: 'Result' },
-    zoom: 'Open full-size image',
+    artLabel: 'Illustration',
     items: [
       {
         tag: 'SAP FSM',
@@ -83,10 +83,7 @@ export default {
         situation: 'Large checklist templates – 10 chapters with more than 230 fields in the demo – are tedious and error-prone to maintain and import into SAP FSM by hand.',
         solution: 'A builder in which chapters and fields (text, choice, yes/no, number, photo, barcode, signature, device card) are created by drag & drop, versioned and validated. One click exports a ZIP file in the SAP FSM import format.',
         result: 'A template with 10 chapters and 237 fields as an import-ready, versioned ZIP file – no manual re-entry in SAP FSM.',
-        media: {
-          main: { src: 'case-builder', w: 1200, h: 717, alt: 'Checklist builder with field types and template chapters (demo data, German UI)' },
-          second: { src: 'case-export', w: 1200, h: 717, alt: 'Export dialog for SAP FSM with version number and “download ZIP” (German UI)' },
-        },
+        art: 'builder',
       },
       {
         tag: 'SAP FSM · IoT',
@@ -94,10 +91,7 @@ export default {
         situation: 'Technicians on site need one app that brings together job, device status and checklist – and stores the data directly in SAP FSM.',
         solution: 'A web app on Angular and Cloudflare Workers: live status of IoT devices per site, two-factor sign-in, QR and DataMatrix scanning and guided checklists that land directly in SAP FSM. Plus an admin interface with overview and key figures.',
         result: 'Device feedback within seconds; submitted documents appear with the status “in SAP FSM”.',
-        media: {
-          main: { src: 'case-fsapp', w: 1200, h: 750, alt: 'Admin overview with key figures and documents in status “in SAP FSM” (demo data, German UI)' },
-          phone: { src: 'case-fsapp-phone', w: 720, h: 1440, alt: 'Mobile job overview showing radio reception “4/5 devices received” (demo data, German UI)' },
-        },
+        art: 'fsapp',
       },
       {
         tag: 'Load test',
@@ -105,9 +99,7 @@ export default {
         situation: 'Before technicians send checklists with photos and signatures to SAP FSM every day, delivery has to be proven reliable under load and when things go wrong.',
         solution: 'Simulated technicians submit checklists with photos, signature and device rows through the same path as the real app – including network drops mid-upload, duplicate submissions, two technicians on the same job and simulated SAP errors. Demo tenant only.',
         result: '10,000 checklists processed in the load test without a single error.',
-        media: {
-          main: { src: 'case-belege', w: 1200, h: 495, alt: 'Document overview with technician, source and status “in SAP FSM” (demo data, German UI)' },
-        },
+        art: 'load',
       },
     ],
   },
@@ -122,7 +114,7 @@ export default {
       { icon: 'pie', tag: 'In-house', title: 'Excel Analytics Desktop', text: 'Offline desktop app for Excel and CSV analysis: SQLite import, data explorer, pivot tables, charts and SQL editor – in English, German and Arabic.', tech: ['.NET', 'WPF', 'Blazor Hybrid', 'SQLite'] },
       { icon: 'kanban', tag: 'In-house · live', title: 'Project & task management', text: 'Multi-tenant platform with Kanban, Scrum, Gantt, roadmaps, reports, Planner sync, SSO and a secured MCP interface for AI agents.', tech: ['Next.js', 'PostgreSQL', 'MCP', 'Android'] },
       { icon: 'wrench', tag: 'Prototype', title: 'WerkstattPilot – workshop ERP', text: 'ERP for car repair workshops with a customer app: appointments, work orders, PDF invoices, parts inventory and shop – trilingual with Arabic UI.', tech: ['Next.js', 'Expo', 'Supabase'] },
-      { icon: 'phone', tag: 'Mobile app', title: 'App for a community platform', text: 'Arabic and English, 324 automated tests, builds for iOS and Android – shortly before store release.', tech: ['React Native', 'Expo', 'Supabase'] },
+      { icon: 'phone', tag: 'Mobile app · in development', title: 'App for a community platform', text: 'Arabic and English, 324 automated tests, builds for iOS and Android.', tech: ['React Native', 'Expo', 'Supabase'] },
       { icon: 'landmark', tag: 'E-government', title: 'E-government prototype', text: 'Clickable prototype of a citizen platform with an online auction: identity checks, bidding logic, tamper-evident audit log and admin portal.', tech: ['React', 'Vite', 'Web Crypto'] },
     ],
     ctaTitle: 'Your project next?',

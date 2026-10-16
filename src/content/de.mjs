@@ -73,9 +73,9 @@ export default {
   },
   cases: {
     h2: 'Projekte im Detail',
-    intro: 'Ausgewählte Arbeiten, gezeigt mit Demo-Daten. Kundennamen sind unkenntlich gemacht.',
+    intro: 'Ausgewählte Arbeiten mit Demo-Daten – die Illustrationen sind schematisch und enthalten keine Kundendaten.',
     labels: { situation: 'Ausgangslage', solution: 'Lösung', result: 'Ergebnis' },
-    zoom: 'Bild in voller Größe öffnen',
+    artLabel: 'Illustration',
     items: [
       {
         tag: 'SAP FSM',
@@ -83,10 +83,7 @@ export default {
         situation: 'Umfangreiche Checklisten-Vorlagen – in der Demo 10 Kapitel mit über 230 Feldern – von Hand in SAP FSM zu pflegen und zu importieren ist mühsam und fehleranfällig.',
         solution: 'Ein Builder, in dem Kapitel und Felder (Text, Auswahl, Ja/Nein, Zahl, Foto, Barcode, Unterschrift, Geräte-Karte) per Drag & Drop angelegt, als Fassung versioniert und geprüft werden. Der Export erzeugt per Klick eine ZIP-Datei im SAP-FSM-Importformat.',
         result: 'Vorlage mit 10 Kapiteln und 237 Feldern als importfertige ZIP-Datei mit Versionsnummer – ohne manuelles Nachpflegen in SAP FSM.',
-        media: {
-          main: { src: 'case-builder', w: 1200, h: 717, alt: 'Checklisten-Builder mit Feldtypen und Kapiteln der Vorlage (Demo-Daten)' },
-          second: { src: 'case-export', w: 1200, h: 717, alt: 'Dialog „Für SAP FSM exportieren“ mit Versionsnummer und „ZIP herunterladen“' },
-        },
+        art: 'builder',
       },
       {
         tag: 'SAP FSM · IoT',
@@ -94,10 +91,7 @@ export default {
         situation: 'Monteure brauchen vor Ort eine App, die Auftrag, Gerätestatus und Checkliste zusammenbringt – und die Daten ohne Umweg in SAP FSM ablegt.',
         solution: 'Eine Web-App auf Angular und Cloudflare Workers: Live-Status der IoT-Geräte je Objekt, Zwei-Faktor-Anmeldung, QR- und DataMatrix-Scan sowie geführte Checklisten, die direkt in SAP FSM landen. Dazu eine Verwaltungsoberfläche mit Übersicht und Kennzahlen.',
         result: 'Rückmeldungen der Geräte in Sekunden; eingereichte Belege erscheinen mit Status „in SAP FSM“.',
-        media: {
-          main: { src: 'case-fsapp', w: 1200, h: 750, alt: 'Verwaltungsoberfläche mit Übersicht, Kennzahlen und Belegen im Status „in SAP FSM“ (Demo-Daten)' },
-          phone: { src: 'case-fsapp-phone', w: 720, h: 1440, alt: 'Mobile Einsatz-Übersicht mit Funk-Empfang „4/5 Geräte empfangen“ (Demo-Daten)' },
-        },
+        art: 'fsapp',
       },
       {
         tag: 'Lasttest',
@@ -105,9 +99,7 @@ export default {
         situation: 'Bevor Monteure im Alltag Checklisten mit Fotos und Unterschrift an SAP FSM senden, muss feststehen, dass die Zustellung auch unter Last und bei Störungen zuverlässig funktioniert.',
         solution: 'Simulierte Monteure reichen über denselben Weg wie die echte App Checklisten mit Fotos, Unterschrift und Gerätezeilen ein – inklusive Netzabbrüchen mitten im Senden, doppelten Einreichungen, zwei Monteuren am selben Auftrag und nachgestellten SAP-Fehlern. Ausschließlich im Demo-Mandanten.',
         result: '10.000 Checklisten im Lasttest fehlerfrei verarbeitet.',
-        media: {
-          main: { src: 'case-belege', w: 1200, h: 495, alt: 'Belegübersicht mit Monteur, Herkunft und Status „in SAP FSM“ (Demo-Daten)' },
-        },
+        art: 'load',
       },
     ],
   },
@@ -122,7 +114,7 @@ export default {
       { icon: 'pie', tag: 'Eigenentwicklung', title: 'Excel Analytics Desktop', text: 'Offline-Desktop-App für Excel- und CSV-Analysen: Import in SQLite, Datenexplorer, Pivot-Tabellen, Diagramme und SQL-Editor – auf Deutsch, Englisch, Arabisch.', tech: ['.NET', 'WPF', 'Blazor Hybrid', 'SQLite'] },
       { icon: 'kanban', tag: 'Eigenentwicklung · live', title: 'Projekt- & Aufgabenmanagement', text: 'Mandantenfähige Plattform mit Kanban, Scrum, Gantt, Roadmaps, Berichten, Planner-Sync, SSO und abgesicherter MCP-Schnittstelle für KI-Agenten.', tech: ['Next.js', 'PostgreSQL', 'MCP', 'Android'] },
       { icon: 'wrench', tag: 'Prototyp', title: 'WerkstattPilot – Werkstatt-ERP', text: 'ERP für Kfz-Werkstätten mit Kunden-App: Termine, Aufträge, Rechnungen als PDF, Lager und Shop – dreisprachig mit arabischer Oberfläche.', tech: ['Next.js', 'Expo', 'Supabase'] },
-      { icon: 'phone', tag: 'Mobile App', title: 'App für eine Community-Plattform', text: 'Arabisch und Englisch, 324 automatisierte Tests, Builds für iOS und Android – kurz vor der Store-Veröffentlichung.', tech: ['React Native', 'Expo', 'Supabase'] },
+      { icon: 'phone', tag: 'Mobile App · in Entwicklung', title: 'App für eine Community-Plattform', text: 'Arabisch und Englisch, 324 automatisierte Tests, Builds für iOS und Android.', tech: ['React Native', 'Expo', 'Supabase'] },
       { icon: 'landmark', tag: 'E-Government', title: 'E-Government-Prototyp', text: 'Klickbarer Prototyp einer Bürgerplattform mit Online-Auktion: Identitätsprüfung, Bietlogik, Audit-Log mit Hash-Kette und Verwaltungsportal.', tech: ['React', 'Vite', 'Web Crypto'] },
     ],
     ctaTitle: 'Ihr Projekt als Nächstes?',

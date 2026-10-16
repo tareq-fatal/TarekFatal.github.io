@@ -319,7 +319,7 @@ ${header(c, depth, { anchors: true, langLinks })}
 <div><h2 id="contact-h">${esc(c.contact.h2)}</h2><p class="lead">${esc(c.contact.lead)}</p>
 <p style="margin:0 0 .4rem;color:var(--muted)">${esc(c.contact.emailLabel)}</p>
 <a class="mail ltr" href="mailto:${EMAIL}?subject=${encodeURIComponent(c.contact.form.subject)}">${EMAIL}</a></div>
-<form class="form" id="cf" action="mailto:${EMAIL}" method="post" enctype="text/plain" data-subject="${esc(c.contact.form.subject)}">
+<form class="form" id="cf" data-subject="${esc(c.contact.form.subject)}">
 <div class="two"><div class="field"><label for="f-name">${esc(c.contact.form.name)}</label><input id="f-name" name="name" autocomplete="name" required></div>
 <div class="field"><label for="f-email">${esc(c.contact.form.email)}</label><input id="f-email" name="email" type="email" autocomplete="email" dir="ltr" required></div></div>
 <div class="field"><label for="f-company">${esc(c.contact.form.company)}</label><input id="f-company" name="company" autocomplete="organization"></div>

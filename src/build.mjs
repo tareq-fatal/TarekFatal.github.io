@@ -73,6 +73,8 @@ function up(depth) {
   return '../'.repeat(depth);
 }
 const hl = (c) => c.hreflang || c.lang;
+// German is the main market: its landing page lives at the site root.
+const homePath = (l) => (l.lang === 'de' ? '' : `${l.lang}/`);
 
 const ICONS = {
   compass: '<circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36z"/>',
@@ -219,7 +221,7 @@ ${jsonld ? `<script type="application/ld+json">${JSON.stringify(jsonld)}</script
 }
 
 function header(c, depth, { anchors = true, langLinks }) {
-  const home = `${up(depth)}${c.lang}/`;
+  const home = `${up(depth)}${homePath(c)}`;
   const pre = anchors ? '' : home;
   const LINKS = [
     ['services', 'services'],
@@ -265,7 +267,7 @@ function footer(c, depth) {
   const r = up(depth);
   return `<footer class="site-footer"><div class="wrap">
 <div class="foot">
-<div>${brand(`${r}${c.lang}/`)}<p>${esc(c.footer.text)}</p></div>
+<div>${brand(`${r}${homePath(c)}`)}<p>${esc(c.footer.text)}</p></div>
 <div><h2>${esc(c.footer.legal)}</h2><ul><li><a href="${r}${c.footer.imprint.href}">${esc(c.footer.imprint.label)}</a></li><li><a href="${r}${c.footer.privacy.href}">${esc(c.footer.privacy.label)}</a></li></ul></div>
 <div><h2>${esc(c.footer.contact)}</h2><ul><li><a class="ltr" href="mailto:${EMAIL}">${EMAIL}</a></li><li><a href="${SAME_AS[0]}" rel="noopener" target="_blank">LinkedIn</a></li><li><a href="${SAME_AS[1]}" rel="noopener" target="_blank">freelancermap</a></li></ul></div>
 </div>
@@ -274,7 +276,7 @@ function footer(c, depth) {
 }
 
 function jsonLd(c) {
-  const url = `${SITE}${c.lang}/`;
+  const url = `${SITE}${homePath(c)}`;
   const org = `${SITE}#organization`;
   const person = `${SITE}#TOF-TOF`;
   return {
@@ -350,7 +352,7 @@ function jsonLd(c) {
   };
 }
 
-const alternatesHome = [...LANGS.map((l) => [hl(l), `${l.lang}/`]), ['x-default', '']];
+const alternatesHome = [...LANGS.map((l) => [hl(l), homePath(l)]), ['x-default', '']];
 
 function h1(text) {
   const nw = (t) => esc(t).replace('SAP Business One', '<span class="nw">SAP Business One</span>');
@@ -359,11 +361,11 @@ function h1(text) {
 }
 
 function landing(c) {
-  const depth = 1;
+  const depth = c.lang === 'de' ? 0 : 1;
   const r = up(depth);
-  const langLinks = LANGS.map((l) => [l, `${r}${l.lang}/`]);
+  const langLinks = LANGS.map((l) => [l, `${r}${homePath(l)}`]);
   const callHref = `mailto:${EMAIL}?subject=${encodeURIComponent(c.contact.callSubject)}&amp;body=${encodeURIComponent(c.contact.callBody)}`;
-  return `${head({ c, title: c.title, description: c.description, path: `${c.lang}/`, depth, alternates: alternatesHome, jsonld: jsonLd(c) })}
+  return `${head({ c, title: c.title, description: c.description, path: homePath(c), depth, alternates: alternatesHome, jsonld: jsonLd(c) })}
 <body id="top">
 ${header(c, depth, { anchors: true, langLinks })}
 <main id="main">
@@ -505,36 +507,17 @@ ${footer(c, depth)}
 `;
 }
 
-function chooser() {
-  const c = en;
-  const langLinks = LANGS.map((l) => [l, `${l.lang}/`]);
-  return `${head({ c, title: c.title, description: en.description, path: '', depth: 0, alternates: alternatesHome })}
-<body>
-<script>(function(){var m={de:'de',ar:'ar',zh:'zh',en:'en'},l=(navigator.languages||[navigator.language||'en']);for(var i=0;i<l.length;i++){var k=String(l[i]).slice(0,2).toLowerCase();if(m[k]){location.replace(m[k]+'/');return}}location.replace('en/')})();</script>
-${header(c, 0, { anchors: false, langLinks })}
-<main id="main" class="hero"><div class="chooser"><div class="wrap">
-<h1>${BRAND}</h1>
-<p class="lead">SAP Business One · SAP Field Service Management · Cloudflare &amp; IoT</p>
-<ul>${LANGS.map((l) => `<li><a class="btn btn-ghost" href="${l.lang}/" hreflang="${hl(l)}" lang="${l.htmlLang}">${esc(l.label)}</a></li>`).join('')}</ul>
-</div></div></main>
-${footer(c, 0)}
-<script>${themeScript}</script>
-</body>
-</html>
-`;
-}
-
 function notFound() {
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Page not found · ${BRAND}</title><meta name="robots" content="noindex">${headInit}<style>${cssSrc.replaceAll('__R__', '/')}</style></head>
 <body><main id="main" class="hero"><div class="chooser"><div class="wrap"><h1>404</h1><p class="lead">Page not found · <span lang="de">Seite nicht gefunden</span> · <span lang="ar" dir="rtl">الصفحة غير موجودة</span> · <span lang="zh-Hans">页面未找到</span></p>
-<ul>${LANGS.map((l) => `<li><a class="btn btn-ghost" data-p="${l.lang}/" href="/${l.lang}/" lang="${l.htmlLang}">${esc(l.label)}</a></li>`).join('')}</ul></div></div></main>
+<ul>${LANGS.map((l) => `<li><a class="btn btn-ghost" data-p="${homePath(l)}" href="/${homePath(l)}" lang="${l.htmlLang}">${esc(l.label)}</a></li>`).join('')}</ul></div></div></main>
 <script>var b=location.hostname.endsWith('github.io')?'/'+location.pathname.split('/')[1]+'/':'/';document.querySelectorAll('[data-p]').forEach(function(a){a.href=b+a.dataset.p})</script></body></html>
 `;
 }
 
 function sitemap() {
   const alt = alternatesHome.map(([h, p]) => `<xhtml:link rel="alternate" hreflang="${h}" href="${SITE + p}"/>`).join('');
-  const urls = [...LANGS.map((l) => `${l.lang}/`), ''];
+  const urls = LANGS.map(homePath);
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${urls.map((p) => `<url><loc>${SITE + p}</loc><lastmod>${TODAY}</lastmod>${alt}</url>`).join('\n')}
@@ -576,7 +559,7 @@ ${c.faq.items.map((f) => `### ${f.q}\n${f.a}`).join('\n\n')}
 
 ## Pages
 - [English](${SITE}en/)
-- [Deutsch](${SITE}de/)
+- [Deutsch](${SITE})
 - [العربية](${SITE}ar/)
 - [简体中文](${SITE}zh/)
 - [Impressum](${SITE}de/impressum/) · [Imprint](${SITE}en/imprint/)
@@ -584,6 +567,35 @@ ${c.faq.items.map((f) => `### ${f.q}\n${f.a}`).join('\n\n')}
 
 ## Profiles (TOF Solution)
 ${SAME_AS.map((u) => `- ${u}`).join('\n')}
+`;
+}
+
+// Old /de/ URLs: instant redirect to the canonical German root (keeps query and #anchor).
+function deRedirect() {
+  return `<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${BRAND}</title>
+<link rel="canonical" href="${SITE}">
+<meta http-equiv="refresh" content="0;url=../">
+<script>location.replace('../'+location.search+location.hash)</script>
+</head>
+<body><p><a href="../">${BRAND} – tarekfatal.com</a></p></body>
+</html>
+`;
+}
+
+// Gentle language suggestion on the German root: no redirect, a dismissible toast at the bottom (no layout shift).
+function langHint() {
+  const T = {
+    en: ['This page is also available in English.', 'Switch to English', 'Close'],
+    ar: ['هذه الصفحة متوفرة أيضًا باللغة العربية.', 'الانتقال إلى العربية', 'إغلاق'],
+    zh: ['本页面也提供简体中文版。', '切换到中文', '关闭'],
+  };
+  return `<div class="lang-hint" id="lang-hint" role="region" aria-label="Language" hidden><p></p><a class="btn btn-primary btn-sm" href="#"></a><button class="icon-btn" type="button"></button></div>
+<script>(function(){var T=${JSON.stringify(T)},H={en:'en/',ar:'ar/',zh:'zh/'},L=navigator.languages||[navigator.language||''],k=null;for(var i=0;i<L.length;i++){var x=String(L[i]).slice(0,2).toLowerCase();if(x==='de')return;if(T[x]){k=x;break}}if(!k)return;try{if(localStorage.getItem('lang-hint')==='off')return}catch(e){}var el=document.getElementById('lang-hint'),t=T[k];el.lang=k==='zh'?'zh-Hans':k;el.dir=k==='ar'?'rtl':'ltr';el.querySelector('p').textContent=t[0];var a=el.querySelector('a');a.textContent=t[1];a.href=H[k];a.hreflang=k;var b=el.querySelector('button');b.setAttribute('aria-label',t[2]);b.innerHTML='\u00d7';b.addEventListener('click',function(){el.hidden=true;try{localStorage.setItem('lang-hint','off')}catch(e){}});el.hidden=false})()</script>
 `;
 }
 
@@ -595,7 +607,6 @@ const write = (p, s) => {
   writeFileSync(f, s);
 };
 cpSync(join(ROOT, 'src/static'), OUT, { recursive: true });
-write('index.html', chooser());
 const NB = ' ';
 const KEEP = ['SAP Business One', 'SAP Field Service Management', 'SAP S/4HANA', 'SAP FSM', 'SAP B1', 'Crystal Reports', 'React Native', 'Cloudflare Tunnel', 'Service Layer', 'DI API', 'EN 16931'];
 // No line break inside product names, after Arabic "لـ" or before " – ". Only visible body text changes; tags, attributes and scripts stay as they are.
@@ -606,7 +617,8 @@ const keep = (html) => {
     // the hero h1 keeps normal spaces: its .nw span only stays unbroken from 360px up (320px reflow)
     .replace(/<h1[\s\S]*?<\/h1>/, (h) => h.replaceAll(NB, ' '));
 };
-for (const c of LANGS) write(`${c.lang}/index.html`, keep(landing(c)));
+for (const c of LANGS) write(`${homePath(c)}index.html`, c.lang === 'de' ? keep(landing(c)).replace('</body>', `${langHint()}</body>`) : keep(landing(c)));
+write('de/index.html', deRedirect());
 for (const p of legalPages(EMAIL)) write(`${p.path}index.html`, legal(p));
 write('404.html', notFound());
 write('sitemap.xml', sitemap());

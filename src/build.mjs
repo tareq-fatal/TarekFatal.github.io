@@ -455,7 +455,6 @@ ${c.about.paragraphs.map((p) => `<p>${esc(p)}</p>`).join('')}
       ? `<img class="portrait" src="${r}${PHOTO}" width="132" height="132" alt="${esc(c.about.photoAlt)}">`
       : `<div class="portrait" role="img" aria-label="${esc(c.about.photoAlt)}">TF</div>`
   }<h3 id="person-h">${esc(c.about.person.name)}</h3><p class="role">${esc(c.about.person.role)} · ${BRAND}</p><p class="cred">${esc(c.about.person.cred)}</p>
-<p class="badge">${icon('award')}${esc(c.about.person.cert)}</p>
 <p class="bio">${esc(c.about.person.text)}</p>
 <p class="profiles"><a class="btn btn-ghost btn-sm" href="${SAME_AS[0]}" rel="me noopener" target="_blank">LinkedIn ${icon('ext')}</a><a class="btn btn-ghost btn-sm" href="${SAME_AS[1]}" rel="me noopener" target="_blank">freelancermap ${icon('ext')}</a></p>
 <a class="btn btn-primary" href="${callHref}">${icon('calendar')} ${esc(c.hero.call)}</a></aside>

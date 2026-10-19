@@ -153,7 +153,6 @@ export default {
       name: 'TOF Solution (TOF Solution)',
       role: 'المؤسس والمالك',
       cred: 'أخصائي معلوماتية معتمد من IHK (Fachinformatiker)',
-      cert: 'جارٍ التحضير لشهادة SAP FSM',
       text: 'يرافق TOF مشروعك شخصيًا – من المكالمة الأولى حتى التسليم.',
     },
     photoAlt: 'TOF Solution',

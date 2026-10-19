@@ -3,7 +3,7 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, extname } from 'node:path';
 const DIR = process.argv[2] || 'dist';
-const RULES = [/\b95\s?€|€\s?95\b|EUR\s?95|95 يورو|95 欧元|stundensatz|hourly rate|pricerange|\d+\s?€\/h|€\d+\/h/i,/marit/i, /radar/i, /marine/i, /naval/i, /\bsea\b/i, /seebulletin/i, /küste/i, /\bcoast/i, /بحري/, /رادار/, /البحر/, /海/, /mot-plates/i, /objektus/i, /case-(builder|export|fsapp|belege)/i, /store-veröffentlichung|store release|上架应用商店|النشر في المتاجر/i, /<img\b(?![^>]*class="portrait")/i];
+const RULES = [/\b95\s?€|€\s?95\b|EUR\s?95|95 يورو|95 欧元|stundensatz|hourly rate|pricerange|\d+\s?€\/h|€\d+\/h/i,/marit/i, /radar/i, /marine/i, /naval/i, /\bsea\b/i, /seebulletin/i, /küste/i, /\bcoast/i, /بحري/, /رادار/, /البحر/, /海/, /mot-plates/i, /objektus/i, /case-(builder|export|fsapp|belege)/i, /store-veröffentlichung|store release|上架应用商店|النشر في المتاجر/i, /<img\b(?![^>]*class="portrait")/i, /zertifizierung|certification in preparation|FSM certification|SAP FSM 认证|شهادة SAP FSM|لشهادة SAP FSM/i];
 const TEXT = new Set(['.html', '.txt', '.xml', '.json', '.svg', '.webmanifest', '.mjs', '.css', '.md', '']);
 const RASTER = /\.(png|jpe?g|webp|gif|avif)$/i;
 const ALLOWED_RASTER = /(^|[\\/])og[\\/]og-[a-z]+\.png$|(^|[\\/])apple-touch-icon\.png$|(^|[\\/])img[\\/]portrait\.(webp|jpe?g|png)$/i;

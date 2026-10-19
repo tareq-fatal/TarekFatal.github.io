@@ -153,7 +153,6 @@ export default {
       name: 'TOF Solution',
       role: 'Gründer & Inhaber',
       cred: 'Fachinformatiker (IHK)',
-      cert: 'SAP-FSM-Zertifizierung in Vorbereitung',
       text: 'TOF begleitet Ihr Projekt persönlich – vom ersten Gespräch bis zur Übergabe.',
     },
     photoAlt: 'TOF Solution',

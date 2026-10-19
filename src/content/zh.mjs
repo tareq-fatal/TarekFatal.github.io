@@ -154,7 +154,6 @@ export default {
       name: 'TOF Solution',
       role: '创始人兼负责人',
       cred: '德国工商会（IHK）认证信息技术专员',
-      cert: 'SAP FSM 认证准备中',
       text: 'TOF 亲自跟进您的项目——从第一次沟通到最终交接。',
     },
     photoAlt: 'TOF Solution',

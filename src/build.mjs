@@ -1,4 +1,4 @@
-// Static site generator for tarekfatal.com (TOF Solution) – no dependencies.
+// Static site generator for the TOF Solution website – no dependencies.
 // Usage: node src/build.mjs  →  writes ./dist
 import { mkdirSync, writeFileSync, readFileSync, cpSync, rmSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -18,12 +18,6 @@ const BRAND = 'TOF Solution';
 const LANGS = [en, de, ar, zh];
 const TODAY = new Date().toISOString().slice(0, 10);
 const YEAR = TODAY.slice(0, 4);
-// Portrait: set to e.g. 'img/TOF.webp' (square, ≥264px) once a photo exists; until then initials are shown.
-const PHOTO = null;
-const SAME_AS = [
-  'https://www.linkedin.com/in/tof-solution/',
-  'https://www.freelancermap.de/profil/tof-solution',
-];
 const KNOWS_ABOUT = [
   'SAP Business One',
   'SAP Business One SDK',
@@ -191,7 +185,7 @@ function head({ c, title, description, path, depth, alternates, robots = 'index,
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
 <meta name="robots" content="${robots}">
-<meta name="author" content="${BRAND} – TOF Solution">
+<meta name="author" content="${BRAND}">
 <link rel="canonical" href="${url}">
 ${(alternates || []).map(([h, p]) => `<link rel="alternate" hreflang="${h}" href="${SITE + p}">`).join('\n')}
 ${preload.map((f) => `<link rel="preload" href="${r}fonts/${f}.woff2" as="font" type="font/woff2" crossorigin>`).join('\n')}
@@ -269,16 +263,15 @@ function footer(c, depth) {
 <div class="foot">
 <div>${brand(`${r}${homePath(c)}`)}<p>${esc(c.footer.text)}</p></div>
 <div><h2>${esc(c.footer.legal)}</h2><ul><li><a href="${r}${c.footer.imprint.href}">${esc(c.footer.imprint.label)}</a></li><li><a href="${r}${c.footer.privacy.href}">${esc(c.footer.privacy.label)}</a></li></ul></div>
-<div><h2>${esc(c.footer.contact)}</h2><ul><li><a class="ltr" href="mailto:${EMAIL}">${EMAIL}</a></li><li><a href="${SAME_AS[0]}" rel="noopener" target="_blank">LinkedIn</a></li><li><a href="${SAME_AS[1]}" rel="noopener" target="_blank">freelancermap</a></li></ul></div>
+<div><h2>${esc(c.footer.contact)}</h2><ul><li><a href="mailto:${EMAIL}">${esc(c.contact.mailText)}</a></li></ul></div>
 </div>
-<p class="copy">© ${YEAR} ${BRAND} · TOF Solution</p>
+<p class="copy">© ${YEAR} ${BRAND}</p>
 </div></footer>`;
 }
 
 function jsonLd(c) {
   const url = `${SITE}${homePath(c)}`;
   const org = `${SITE}#organization`;
-  const person = `${SITE}#TOF-TOF`;
   return {
     '@context': 'https://schema.org',
     '@graph': [
@@ -288,11 +281,9 @@ function jsonLd(c) {
         '@id': org,
         name: BRAND,
         url: SITE,
-        email: EMAIL,
         logo: `${SITE}apple-touch-icon.png`,
         image: `${SITE}og/og-en.png`,
         description: c.schema.orgDescription,
-        founder: { '@id': person },
         address: { '@type': 'PostalAddress', addressCountry: 'DE' },
         areaServed: [
           { '@type': 'Country', name: 'Germany' },
@@ -301,7 +292,7 @@ function jsonLd(c) {
         ],
         knowsLanguage: ['de', 'en', 'ar'],
         knowsAbout: KNOWS_ABOUT,
-        contactPoint: { '@type': 'ContactPoint', contactType: 'sales', email: EMAIL, availableLanguage: ['de', 'en', 'ar'] },
+        contactPoint: { '@type': 'ContactPoint', contactType: 'sales', availableLanguage: ['de', 'en', 'ar'] },
         hasOfferCatalog: {
           '@type': 'OfferCatalog',
           name: c.services.h2,
@@ -310,24 +301,6 @@ function jsonLd(c) {
             itemOffered: { '@type': 'Service', name: s.title, description: s.text, category: s.group, provider: { '@id': org } },
           })),
         },
-      },
-      {
-        '@type': 'Person',
-        '@id': person,
-        name: 'TOF Solution',
-        jobTitle: c.schema.jobTitle,
-        description: c.schema.personDescription,
-        worksFor: { '@id': org },
-        email: `mailto:${EMAIL}`,
-        knowsLanguage: ['de', 'en', 'ar'],
-        knowsAbout: KNOWS_ABOUT,
-        hasCredential: {
-          '@type': 'EducationalOccupationalCredential',
-          name: 'Fachinformatiker (IHK)',
-          credentialCategory: 'Vocational qualification',
-          recognizedBy: { '@type': 'Organization', name: 'Industrie- und Handelskammer (IHK)' },
-        },
-        sameAs: SAME_AS,
       },
       {
         '@type': 'WebPage',
@@ -448,15 +421,10 @@ ${caseArt(k.art, c, k.title)}</article>`
 <div class="reveal"><div class="section-head" style="margin-bottom:1.5rem"><h2 id="about-h">${esc(c.about.h2)}</h2></div>
 ${c.about.paragraphs.map((p) => `<p>${esc(p)}</p>`).join('')}
 <div class="facts-box"><h3>${esc(c.about.factsTitle)}</h3><dl>${c.about.facts
-    .map(([k, v]) => `<dt>${esc(k)}</dt><dd>${v.includes('@') ? `<a class="ltr" href="mailto:${EMAIL}">${EMAIL}</a>` : esc(v)}</dd>`)
+    .map(([k, v]) => `<dt>${esc(k)}</dt><dd>${v === 'MAILTO' ? `<a href="mailto:${EMAIL}">${esc(c.contact.mailText)}</a>` : esc(v)}</dd>`)
     .join('')}</dl></div></div>
-<aside class="card person reveal" aria-labelledby="person-h"><p class="kicker">${esc(c.about.contactTitle)}</p>${
-    PHOTO
-      ? `<img class="portrait" src="${r}${PHOTO}" width="132" height="132" alt="${esc(c.about.photoAlt)}">`
-      : `<div class="portrait" role="img" aria-label="${esc(c.about.photoAlt)}">TF</div>`
-  }<h3 id="person-h">${esc(c.about.person.name)}</h3><p class="role">${esc(c.about.person.role)} · ${BRAND}</p><p class="cred">${esc(c.about.person.cred)}</p>
+<aside class="card person reveal" aria-labelledby="person-h"><div class="portrait logo" aria-hidden="true">${logo()}</div><h3 id="person-h">${esc(c.about.contactTitle)}</h3><p class="role">${esc(c.about.person.role)} · ${BRAND}</p><p class="cred">${esc(c.about.person.cred)}</p>
 <p class="bio">${esc(c.about.person.text)}</p>
-<p class="profiles"><a class="btn btn-ghost btn-sm" href="${SAME_AS[0]}" rel="me noopener" target="_blank">LinkedIn ${icon('ext')}</a><a class="btn btn-ghost btn-sm" href="${SAME_AS[1]}" rel="me noopener" target="_blank">freelancermap ${icon('ext')}</a></p>
 <a class="btn btn-primary" href="${callHref}">${icon('calendar')} ${esc(c.hero.call)}</a></aside>
 </div></section>
 
@@ -469,7 +437,7 @@ ${c.about.paragraphs.map((p) => `<p>${esc(p)}</p>`).join('')}
 <div><h2 id="contact-h">${esc(c.contact.h2)}</h2><p class="lead">${esc(c.contact.lead)}</p>
 <a class="btn btn-primary" href="${callHref}">${icon('calendar')} ${esc(c.contact.call)}</a>
 <p class="small">${esc(c.contact.emailLabel)}</p>
-<a class="mail ltr" href="mailto:${EMAIL}?subject=${encodeURIComponent(c.contact.form.subject)}">${EMAIL}</a></div>
+<a class="mail" href="mailto:${EMAIL}?subject=${encodeURIComponent(c.contact.form.subject)}">${icon('mail')} ${esc(c.contact.mailText)}</a></div>
 <div class="form-card"><h3>${esc(c.contact.form.title)}</h3>
 <form class="form" id="cf" data-subject="${esc(c.contact.form.subject)}">
 <div class="two"><div class="field"><label for="f-name">${esc(c.contact.form.name)}</label><input id="f-name" name="name" autocomplete="name" required></div>
@@ -528,7 +496,7 @@ function llms() {
   const c = en;
   return `# ${BRAND} – SAP Business One, SAP FSM & Integration
 
-> ${c.schema.orgDescription} Founder and contact: TOF Solution, IHK-certified IT specialist (Fachinformatiker). Working languages: English, German, Arabic. Contact: ${EMAIL}
+> ${c.schema.orgDescription} Working languages: English, German, Arabic. Contact: via the contact section of the website.
 
 ## Key facts
 ${c.about.facts.map(([k, v]) => `- ${k}: ${v}`).join('\n')}
@@ -563,9 +531,6 @@ ${c.faq.items.map((f) => `### ${f.q}\n${f.a}`).join('\n\n')}
 - [简体中文](${SITE}zh/)
 - [Impressum](${SITE}de/impressum/) · [Imprint](${SITE}en/imprint/)
 - [Datenschutz](${SITE}de/datenschutz/) · [Privacy](${SITE}en/privacy/)
-
-## Profiles (TOF Solution)
-${SAME_AS.map((u) => `- ${u}`).join('\n')}
 `;
 }
 

@@ -1,12 +1,14 @@
 // Impressum / Datenschutz (DE + EN).
-// TODO(TOF): Anschrift fehlt noch – ADDRESS_DE/ADDRESS_EN befüllen (z. B. 'Musterstraße 1<br>12345 Musterstadt'), dann entfällt der Hinweis.
+// TODO: Anbieter und Anschrift fehlen noch – ADDRESS_DE/ADDRESS_EN befüllen (z. B. 'Musterstraße 1<br>12345 Musterstadt'), dann entfällt der Hinweis.
 const ADDRESS_DE = '';
 const ADDRESS_EN = '';
 
 export function legalPages(email) {
-  const mail = `<a class="ltr" href="mailto:${email}">${email}</a>`;
-  const addrDe = `TOF Solution<br>TOF Solution<br>${ADDRESS_DE ? ADDRESS_DE + '<br>' : ''}Deutschland${ADDRESS_DE ? '' : '<br><em>Die vollständige Anschrift wird in Kürze ergänzt.</em>'}`;
-  const addrEn = `TOF Solution<br>TOF Solution<br>${ADDRESS_EN ? ADDRESS_EN + '<br>' : ''}Germany${ADDRESS_EN ? '' : '<br><em>The full postal address will be added shortly.</em>'}`;
+  const mailDe = `<a href="mailto:${email}">E-Mail schreiben</a>`;
+  const mailEn = `<a href="mailto:${email}">Send an email</a>`;
+  // Provider name and address are only published once the registered company name is confirmed.
+  const addrDe = ADDRESS_DE ? `${ADDRESS_DE}<br>Deutschland` : '<em>Die Angaben zum Anbieter und die vollständige Anschrift werden derzeit aktualisiert und in Kürze ergänzt.</em>';
+  const addrEn = ADDRESS_EN ? `${ADDRESS_EN}<br>Germany` : '<em>Provider details and the full postal address are currently being updated and will be added shortly.</em>';
   const imprintPair = [['de', 'de/impressum/'], ['en', 'en/imprint/']];
   const privacyPair = [['de', 'de/datenschutz/'], ['en', 'en/privacy/']];
   const github =
@@ -20,12 +22,12 @@ export function legalPages(email) {
       path: 'de/impressum/',
       pair: imprintPair,
       title: 'Impressum · TOF Solution',
-      description: 'Impressum von TOF Solution, TOF Solution.',
+      description: 'Impressum von TOF Solution.',
       body: `<h1>Impressum</h1>
 <h2>Angaben gemäß § 5 DDG</h2>
 <address>${addrDe}</address>
 <h2>Kontakt</h2>
-<p>E-Mail: ${mail}</p>
+<p>E-Mail: ${mailDe}</p>
 <h2>Verbraucherstreitbeilegung</h2>
 <p>Ich bin nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
 <h2>Haftung für Links</h2>
@@ -36,13 +38,13 @@ export function legalPages(email) {
       path: 'en/imprint/',
       pair: imprintPair,
       title: 'Imprint · TOF Solution',
-      description: 'Legal notice (imprint) of TOF Solution, TOF Solution.',
+      description: 'Legal notice (imprint) of TOF Solution.',
       body: `<h1>Imprint</h1>
 <p>Information according to § 5 of the German Digital Services Act (DDG). The <a href="../../de/impressum/" hreflang="de">German version</a> is legally binding.</p>
 <h2>Provider</h2>
 <address>${addrEn}</address>
 <h2>Contact</h2>
-<p>Email: ${mail}</p>
+<p>Email: ${mailEn}</p>
 <h2>Consumer dispute resolution</h2>
 <p>I am neither willing nor obliged to participate in dispute resolution proceedings before a consumer arbitration board.</p>
 <h2>Liability for links</h2>
@@ -57,7 +59,7 @@ export function legalPages(email) {
       body: `<h1>Datenschutzerklärung</h1>
 <p>Stand: Oktober 2026</p>
 <h2>1. Verantwortlicher</h2>
-<address>${addrDe}<br>E-Mail: ${mail}</address>
+<address>${addrDe}<br>E-Mail: ${mailDe}</address>
 <h2>2. Das Wichtigste in Kürze</h2>
 <ul>
 <li>Diese Website setzt <strong>keine Cookies</strong>, verwendet <strong>keine Analyse- oder Tracking-Dienste</strong> und lädt <strong>keine externen Schriftarten oder Skripte</strong>.</li>
@@ -85,7 +87,7 @@ export function legalPages(email) {
       body: `<h1>Privacy policy</h1>
 <p>Last updated: October 2026. The <a href="../../de/datenschutz/" hreflang="de">German version</a> is legally binding.</p>
 <h2>1. Controller</h2>
-<address>${addrEn}<br>Email: ${mail}</address>
+<address>${addrEn}<br>Email: ${mailEn}</address>
 <h2>2. Summary</h2>
 <ul>
 <li>This website sets <strong>no cookies</strong>, uses <strong>no analytics or tracking services</strong> and loads <strong>no external fonts or scripts</strong>.</li>

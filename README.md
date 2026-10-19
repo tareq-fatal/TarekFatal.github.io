@@ -1,6 +1,6 @@
-# tarekfatal.com – TOF Solution
+# TOF Solution website
 
-Static, dependency-free site for TOF Solution (SAP Business One, SAP Field Service Management, Cloudflare & IoT). Founder & contact: TOF Solution.
+Static, dependency-free site for TOF Solution (SAP Business One, SAP Field Service Management, Cloudflare & IoT).
 
 - Languages: `/en/` (default), `/de/`, `/ar/` (RTL), `/zh/` – hreflang + x-default (`/` picks the browser language)
 - Content: `src/content/*.mjs` · legal pages: `src/legal.mjs` · styles: `src/styles.css` (inlined at build)

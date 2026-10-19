@@ -24,6 +24,7 @@ jobs:
           node-version: 22
       - run: node src/build.mjs
       - run: node src/tools/check-terms.mjs dist
+      - run: node src/tools/check-name.mjs dist
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

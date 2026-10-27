@@ -10,3 +10,10 @@ Static, dependency-free site for TOF Solution (SAP Business One, SAP Field Servi
 - Screenshots: `node src/tools/screenshots.mjs <base-url>` → `.lighthouse/shots`
 - Portrait: set `PHOTO` in `src/build.mjs` once a photo exists
 - No cookies, no tracking, no external fonts or scripts.
+
+## Angebot „Webseite zum Festpreis“
+
+- Seiten: `/webseite/` (DE), `/en/website/`, `/ar/website/` – Inhalte und Preis/Slots in `src/content/webseite.mjs`, Vorlage in `src/webseite.mjs`
+- Terminbuchung ohne Fremdkonto: freie Slots im Browser, fertige E-Mail an die Kontaktadresse, Bestätigung + .ics
+- Demo-Screenshots `src/static/webseite/demo-*.webp` (eigene, fiktive Musterseiten; Repo `webseite-demos`), PDFs + OG-Bild: `node src/tools/render-offer.mjs`
+- Werbepaket: `marketing/webseite-1000/` (nicht Teil der ausgelieferten Seite)

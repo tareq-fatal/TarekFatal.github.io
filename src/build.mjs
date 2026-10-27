@@ -9,6 +9,7 @@ import ar from './content/ar.mjs';
 import zh from './content/zh.mjs';
 import { legalPages } from './legal.mjs';
 import { caseArt } from './art.mjs';
+import { renderOffer, OFFER_LANGS, OFFER_PATHS } from './webseite.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = join(ROOT, 'dist');
@@ -109,6 +110,9 @@ const ICONS = {
   calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
   award: '<circle cx="12" cy="8" r="6"/><path d="M15.48 12.89 17 22l-5-3-5 3 1.52-9.11"/>',
   mail: '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/>',
+  lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+  eye: '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  x: '<path d="M18 6 6 18M6 6l12 12"/>',
 };
 const icon = (name, cls = '') =>
   `<svg${cls ? ` class="${cls}"` : ''} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${ICONS[name]}</svg>`;
@@ -169,9 +173,9 @@ const headInit = `<script>(function(d){try{var t=localStorage.getItem('theme');i
 const themeScript = `var d=document.documentElement,b=document.getElementById('theme');function cur(){return d.dataset.theme||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}function sync(){b.setAttribute('aria-pressed',cur()==='dark')}sync();b.addEventListener('click',function(){var n=cur()==='dark'?'light':'dark';d.dataset.theme=n;try{localStorage.setItem('theme',n)}catch(e){}sync()});document.addEventListener('click',function(e){document.querySelectorAll('details.lang[open],details.menu[open]').forEach(function(x){if(!x.contains(e.target)||e.target.closest('.menu a'))x.removeAttribute('open')})});`;
 const motionScript = `if(d.classList.contains('js')){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{rootMargin:'0px 0px -8% 0px',threshold:.12});document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});var co=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;co.unobserve(e.target);var el=e.target,end=+el.dataset.count,f=new Intl.NumberFormat(el.dataset.locale),t0=performance.now();(function s(t){var p=Math.min(1,(t-t0)/1600);el.textContent=f.format(Math.round(end*(1-Math.pow(1-p,3))));if(p<1)requestAnimationFrame(s)})(t0)})},{threshold:.6});document.querySelectorAll('[data-count]').forEach(function(el){el.textContent='0';co.observe(el)});setTimeout(function(){document.querySelectorAll('svg.flow').forEach(function(s){s.pauseAnimations&&s.pauseAnimations()});d.classList.add('still')},5000)}else{document.querySelectorAll('svg.flow').forEach(function(s){s.pauseAnimations&&s.pauseAnimations()})}`;
 
-function head({ c, title, description, path, depth, alternates, robots = 'index,follow', jsonld }) {
+function head({ c, title, description, path, depth, alternates, robots = 'index,follow', jsonld, ogImage }) {
   const url = SITE + path;
-  const ogImg = `${SITE}og/og-${c.lang}.png`;
+  const ogImg = ogImage ? SITE + ogImage : `${SITE}og/og-${c.lang}.png`;
   const r = up(depth);
   const preload =
     c.lang === 'ar'
@@ -214,7 +218,7 @@ ${jsonld ? `<script type="application/ld+json">${JSON.stringify(jsonld)}</script
 </head>`;
 }
 
-function header(c, depth, { anchors = true, langLinks }) {
+function header(c, depth, { anchors = true, langLinks, cta }) {
   const home = `${up(depth)}${homePath(c)}`;
   const pre = anchors ? '' : home;
   const LINKS = [
@@ -253,7 +257,7 @@ ${langLinks
   .join('')}
 </ul></details>
 <button class="icon-btn" id="theme" type="button" aria-label="${esc(c.nav.theme)}" aria-pressed="false">${icon('moon', 'i-moon')}${icon('sun', 'i-sun')}</button>
-<a class="btn btn-primary" href="${pre}#contact">${esc(c.nav.cta)}</a>
+<a class="btn btn-primary" href="${cta ? cta.href : `${pre}#contact`}">${esc(cta ? cta.label : c.nav.cta)}</a>
 </div></div></header>`;
 }
 
@@ -485,9 +489,11 @@ function notFound() {
 function sitemap() {
   const alt = alternatesHome.map(([h, p]) => `<xhtml:link rel="alternate" hreflang="${h}" href="${SITE + p}"/>`).join('');
   const urls = LANGS.map(homePath);
+  const offerAlt = [...Object.entries(OFFER_PATHS), ['x-default', OFFER_PATHS.de]].map(([h, p]) => `<xhtml:link rel="alternate" hreflang="${h}" href="${SITE + p}"/>`).join('');
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${urls.map((p) => `<url><loc>${SITE + p}</loc><lastmod>${TODAY}</lastmod>${alt}</url>`).join('\n')}
+${Object.values(OFFER_PATHS).map((p) => `<url><loc>${SITE + p}</loc><lastmod>${TODAY}</lastmod>${offerAlt}</url>`).join('\n')}
 </urlset>
 `;
 }
@@ -583,6 +589,9 @@ const keep = (html) => {
 };
 for (const c of LANGS) write(`${homePath(c)}index.html`, c.lang === 'de' ? keep(landing(c)).replace('</body>', `${langHint()}</body>`) : keep(landing(c)));
 write('de/index.html', deRedirect());
+// Angebot „Webseite zum Festpreis“ (DE/EN/AR)
+const LANGS_BY = Object.fromEntries(LANGS.map((l) => [l.lang, l]));
+for (const l of OFFER_LANGS) write(`${OFFER_PATHS[l]}index.html`, keep(renderOffer(l, { head, header, footer, icon, esc, up, themeScript, motionScript, LANGS_BY, EMAIL })));
 for (const p of legalPages(EMAIL)) write(`${p.path}index.html`, legal(p));
 write('404.html', notFound());
 write('sitemap.xml', sitemap());

@@ -10,6 +10,7 @@ import zh from './content/zh.mjs';
 import { legalPages } from './legal.mjs';
 import { caseArt } from './art.mjs';
 import { renderOffer, OFFER_LANGS, OFFER_PATHS } from './webseite.mjs';
+import { renderSap, SAP_PATH } from './sap.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = join(ROOT, 'dist');
@@ -593,6 +594,8 @@ write('de/index.html', deRedirect());
 const LANGS_BY = Object.fromEntries(LANGS.map((l) => [l.lang, l]));
 for (const l of OFFER_LANGS) write(`${OFFER_PATHS[l]}index.html`, keep(renderOffer(l, { head, header, footer, icon, esc, up, themeScript, motionScript, LANGS_BY, EMAIL })));
 for (const p of legalPages(EMAIL)) write(`${p.path}index.html`, legal(p));
+// Anzeigen-Landingpage SAP Business One (nur DE, noindex, bewusst nicht in der Sitemap)
+write(`${SAP_PATH}index.html`, keep(renderSap({ head, header, footer, icon, esc, up, themeScript, motionScript, LANGS, homePath, EMAIL })));
 write('404.html', notFound());
 write('sitemap.xml', sitemap());
 write('llms.txt', llms());

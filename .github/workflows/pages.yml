@@ -25,6 +25,7 @@ jobs:
       - run: node src/build.mjs
       - run: node src/tools/check-terms.mjs dist
       - run: node src/tools/check-name.mjs dist
+      - run: node src/tools/check-contrast.mjs
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

@@ -6,17 +6,19 @@ import { fileURLToPath } from 'node:url';
 import en from './content/en.mjs';
 import de from './content/de.mjs';
 import ar from './content/ar.mjs';
-import zh from './content/zh.mjs';
 import { legalPages } from './legal.mjs';
 import { caseArt } from './art.mjs';
 import { renderOffer, OFFER_LANGS, OFFER_PATHS } from './webseite.mjs';
+import { renderProfile, PROFILE_LANGS } from './profile.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = join(ROOT, 'dist');
 const SITE = 'https://tarekfatal.com/';
 const EMAIL = 'Tarek@tarekfatal.com';
 const BRAND = 'TOF Solution';
-const LANGS = [en, de, ar, zh];
+// Startseite = persönliches Profil auf DE/EN/AR (Chinesisch entfällt, /zh/ leitet auf /en/ um)
+const LANGS = [en, de, ar];
+const PREVIEW = process.env.PREVIEW === '1';   // Vorschau-Build: noindex, kein CNAME
 const TODAY = new Date().toISOString().slice(0, 10);
 const YEAR = TODAY.slice(0, 4);
 const KNOWS_ABOUT = [
@@ -49,13 +51,6 @@ const KNOWS_ABOUT = [
   'Next.js',
   '.NET',
 ];
-const FLOW_LABEL = {
-  en: 'Diagram: data flowing between IoT devices, Cloudflare, SAP Field Service Management, SAP Business One and SAP S/4HANA',
-  de: 'Grafik: Datenfluss zwischen IoT-Geräten, Cloudflare, SAP Field Service Management, SAP Business One und SAP S/4HANA',
-  ar: 'رسم توضيحي: تدفق البيانات بين أجهزة إنترنت الأشياء وCloudflare وSAP Field Service Management وSAP Business One وSAP S/4HANA',
-  zh: '示意图：物联网设备、Cloudflare、SAP Field Service Management、SAP Business One 与 SAP S/4HANA 之间的数据流',
-};
-
 const cssSrc = readFileSync(join(ROOT, 'src/styles.css'), 'utf8')
   .replace(/\/\*[\s\S]*?\*\//g, '')
   .replace(/\s*\n\s*/g, '')
@@ -124,56 +119,12 @@ const logo = () => {
 };
 const brand = (href) => `<a class="brand" href="${href}" aria-label="${BRAND}">${logo()}<span><b>TOF</b> <i>Solution</i></span></a>`;
 
-// Hero data-flow graphic. Coordinates are mirrored for RTL so the flow reads in the page direction.
-function flow(c) {
-  const W = 580;
-  const rtl = c.dir === 'rtl';
-  const X = (x) => (rtl ? W - x : x);
-  const n = {
-    iot: [105, 105, 'IoT', 'LIVE'],
-    cf: [105, 355, 'Cloudflare', 'TUNNEL · WORKERS'],
-    fsm: [290, 230],
-    b1: [475, 105, 'SAP Business One', 'ERP'],
-    s4: [475, 355, 'SAP S/4HANA', 'ERP'],
-  };
-  const curve = (a, b) => {
-    const [x1, y1] = n[a];
-    const [x2, y2] = n[b];
-    const mx = (x1 + x2) / 2;
-    return `M${X(x1)} ${y1}C${X(mx)} ${y1} ${X(mx)} ${y2} ${X(x2)} ${y2}`;
-  };
-  const wires = [
-    ['w1', curve('iot', 'fsm')],
-    ['w2', curve('cf', 'fsm')],
-    ['w3', curve('fsm', 'b1')],
-    ['w4', curve('fsm', 's4')],
-    ['w5', `M${X(105)} 105L${X(105)} 355`],
-    ['w6', `M${X(475)} 105L${X(475)} 355`],
-  ];
-  const particle = (id, cls, dur, begin, reverse = false) =>
-    `<circle r="3.2" class="${cls}"><animateMotion dur="${dur}s" begin="${begin}s" repeatCount="indefinite"${reverse ? ' keyPoints="1;0" keyTimes="0;1" calcMode="linear"' : ''}><mpath href="#${id}"/></animateMotion></circle>`;
-  const node = ([x, y, t, s]) => {
-    const w = 204;
-    const left = X(x) - w / 2;
-    const led = rtl ? left + w - 20 : left + 20;
-    const tx = rtl ? left + w - 36 : left + 36;
-    const anchor = rtl ? 'end' : 'start';
-    return `<g class="node"><rect x="${left}" y="${y - 33}" width="${w}" height="66" rx="16"/><circle class="led" cx="${led}" cy="${y - 6}" r="4.5"/><text class="t" x="${tx}" y="${y - 1}" text-anchor="${anchor}">${t}</text><text class="s" x="${tx}" y="${y + 18}" text-anchor="${anchor}">${s}</text></g>`;
-  };
-  return `<svg class="flow" viewBox="0 0 ${W} 460" role="img" aria-label="${esc(FLOW_LABEL[c.lang])}" direction="ltr">
-<defs><linearGradient id="coreGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f6bea"/><stop offset="1" stop-color="#14998c"/></linearGradient></defs>
-${wires.map(([id, d]) => `<path id="${id}" class="wire" d="${d}"/><path class="dash" d="${d}"/>`).join('')}
-${particle('w1', 'p', 2.6, -0.2)}${particle('w1', 'p', 2.6, -1.5)}${particle('w2', 'p', 3, -0.7)}${particle('w3', 'p', 2.6, -1.1)}${particle('w3', 'q', 2.8, -2.2, true)}${particle('w4', 'p', 3, -1.8)}${particle('w4', 'q', 3.2, -0.9, true)}${particle('w5', 'q', 4, -2.4)}${particle('w6', 'q', 4.2, -1.3, true)}
-${node(n.iot)}${node(n.cf)}${node(n.b1)}${node(n.s4)}
-<g class="core"><rect class="halo" x="${X(290) - 100}" y="188" width="200" height="84" rx="22"/><rect class="halo b" x="${X(290) - 100}" y="188" width="200" height="84" rx="22"/><rect x="${X(290) - 100}" y="188" width="200" height="84" rx="22" fill="url(#coreGrad)" stroke="rgba(255,255,255,.3)"/><text class="t" x="${X(290)}" y="228" text-anchor="middle">SAP FSM</text><text class="s" x="${X(290)}" y="250" text-anchor="middle">FIELD SERVICE</text></g>
-</svg>`;
-}
-
 const headInit = `<script>(function(d){try{var t=localStorage.getItem('theme');if(t)d.dataset.theme=t}catch(e){}if(window.matchMedia&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&'IntersectionObserver' in window)d.classList.add('js')})(document.documentElement)</script>`;
 const themeScript = `var d=document.documentElement,b=document.getElementById('theme');function cur(){return d.dataset.theme||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}function sync(){b.setAttribute('aria-pressed',cur()==='dark')}sync();b.addEventListener('click',function(){var n=cur()==='dark'?'light':'dark';d.dataset.theme=n;try{localStorage.setItem('theme',n)}catch(e){}sync()});document.addEventListener('click',function(e){document.querySelectorAll('details.lang[open],details.menu[open]').forEach(function(x){if(!x.contains(e.target)||e.target.closest('.menu a'))x.removeAttribute('open')})});`;
 const motionScript = `if(d.classList.contains('js')){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{rootMargin:'0px 0px -8% 0px',threshold:.12});document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});var co=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;co.unobserve(e.target);var el=e.target,end=+el.dataset.count,f=new Intl.NumberFormat(el.dataset.locale),t0=performance.now();(function s(t){var p=Math.min(1,(t-t0)/1600);el.textContent=f.format(Math.round(end*(1-Math.pow(1-p,3))));if(p<1)requestAnimationFrame(s)})(t0)})},{threshold:.6});document.querySelectorAll('[data-count]').forEach(function(el){el.textContent='0';co.observe(el)});setTimeout(function(){document.querySelectorAll('svg.flow').forEach(function(s){s.pauseAnimations&&s.pauseAnimations()});d.classList.add('still')},5000)}else{document.querySelectorAll('svg.flow').forEach(function(s){s.pauseAnimations&&s.pauseAnimations()})}`;
 
 function head({ c, title, description, path, depth, alternates, robots = 'index,follow', jsonld, ogImage }) {
+  if (PREVIEW) robots = 'noindex,nofollow';
   const url = SITE + path;
   const ogImg = ogImage ? SITE + ogImage : `${SITE}og/og-${c.lang}.png`;
   const r = up(depth);
@@ -218,30 +169,17 @@ ${jsonld ? `<script type="application/ld+json">${JSON.stringify(jsonld)}</script
 </head>`;
 }
 
-function header(c, depth, { anchors = true, langLinks, cta }) {
+function header(c, depth, { anchors = true, langLinks, cta, links }) {
   const home = `${up(depth)}${homePath(c)}`;
   const pre = anchors ? '' : home;
-  const LINKS = [
-    ['services', 'services'],
-    ['work', 'cases'],
-    ['packages', 'packages'],
-    ['about', 'about'],
-    ['faq', 'faq'],
-  ];
-  const menu = anchors
-    ? `<details class="menu"><summary class="icon-btn" aria-label="${esc(c.nav.menu)}">${icon('burger')}</summary><nav aria-label="${esc(c.nav.menu)}"><ul>${LINKS.map(([k, id]) => `<li><a href="#${id}">${esc(c.nav[k])}</a></li>`).join('')}<li><a href="#contact">${esc(c.nav.cta)}</a></li></ul></nav></details>`
+  // links: [[Beschriftung, href], …] – nur auf Seiten mit Abschnitts-Navigation
+  const items = links || [];
+  const ctaHref = cta ? cta.href : `${pre}#contact`;
+  const ctaLabel = cta ? cta.label : c.nav.cta;
+  const menu = items.length
+    ? `<details class="menu"><summary class="icon-btn" aria-label="${esc(c.nav.menu)}">${icon('burger')}</summary><nav aria-label="${esc(c.nav.menu)}"><ul>${items.map(([l, href]) => `<li><a href="${href}">${esc(l)}</a></li>`).join('')}<li><a href="${ctaHref}">${esc(ctaLabel)}</a></li></ul></nav></details>`
     : '';
-  const nav = anchors
-    ? `<nav class="nav" aria-label="${esc(c.nav.menu)}">${[
-        ['services', 'services'],
-        ['work', 'cases'],
-        ['packages', 'packages'],
-        ['about', 'about'],
-        ['faq', 'faq'],
-      ]
-        .map(([k, id]) => `<a href="#${id}">${esc(c.nav[k])}</a>`)
-        .join('')}</nav>`
-    : '';
+  const nav = items.length ? `<nav class="nav" aria-label="${esc(c.nav.menu)}">${items.map(([l, href]) => `<a href="${href}">${esc(l)}</a>`).join('')}</nav>` : '';
   return `<a class="skip" href="#main">${esc(c.nav.skip)}</a>
 <header class="site-header"><div class="wrap bar">
 ${brand(anchors ? '#top' : home)}
@@ -257,7 +195,7 @@ ${langLinks
   .join('')}
 </ul></details>
 <button class="icon-btn" id="theme" type="button" aria-label="${esc(c.nav.theme)}" aria-pressed="false">${icon('moon', 'i-moon')}${icon('sun', 'i-sun')}</button>
-<a class="btn btn-primary" href="${cta ? cta.href : `${pre}#contact`}">${esc(cta ? cta.label : c.nav.cta)}</a>
+<a class="btn btn-primary" href="${ctaHref}">${esc(ctaLabel)}</a>
 </div></div></header>`;
 }
 
@@ -297,14 +235,6 @@ function jsonLd(c) {
         knowsLanguage: ['de', 'en', 'ar'],
         knowsAbout: KNOWS_ABOUT,
         contactPoint: { '@type': 'ContactPoint', contactType: 'sales', availableLanguage: ['de', 'en', 'ar'] },
-        hasOfferCatalog: {
-          '@type': 'OfferCatalog',
-          name: c.services.h2,
-          itemListElement: [...c.services.b1.items.map((s) => ({ ...s, group: c.services.b1.group })), ...c.services.items].map((s) => ({
-            '@type': 'Offer',
-            itemOffered: { '@type': 'Service', name: s.title, description: s.text, category: s.group, provider: { '@id': org } },
-          })),
-        },
       },
       {
         '@type': 'WebPage',
@@ -318,147 +248,11 @@ function jsonLd(c) {
         primaryImageOfPage: `${SITE}og/og-${c.lang}.png`,
         dateModified: TODAY,
       },
-      {
-        '@type': 'FAQPage',
-        '@id': `${url}#faq`,
-        inLanguage: hl(c),
-        isPartOf: { '@id': `${url}#webpage` },
-        mainEntity: c.faq.items.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
-      },
     ],
   };
 }
 
 const alternatesHome = [...LANGS.map((l) => [hl(l), homePath(l)]), ['x-default', '']];
-
-function h1(text) {
-  const nw = (t) => esc(t).replace('SAP Business One', '<span class="nw">SAP Business One</span>');
-  const i = text.indexOf(' – ');
-  return i < 0 ? nw(text) : `${nw(text.slice(0, i))}&nbsp;– <em>${nw(text.slice(i + 3))}</em>`;
-}
-
-function landing(c) {
-  const depth = c.lang === 'de' ? 0 : 1;
-  const r = up(depth);
-  const langLinks = LANGS.map((l) => [l, `${r}${homePath(l)}`]);
-  const callHref = `mailto:${EMAIL}?subject=${encodeURIComponent(c.contact.callSubject)}&amp;body=${encodeURIComponent(c.contact.callBody)}`;
-  return `${head({ c, title: c.title, description: c.description, path: homePath(c), depth, alternates: alternatesHome, jsonld: jsonLd(c) })}
-<body id="top">
-${header(c, depth, { anchors: true, langLinks })}
-<main id="main">
-<section class="hero" aria-labelledby="h1"><div class="wrap">
-<div class="hero-grid">
-<div>
-<p class="pill"><span class="pulse" aria-hidden="true"></span>${esc(c.hero.eyebrow)}</p>
-<h1 id="h1">${h1(c.hero.h1)}</h1>
-<p class="lead">${esc(c.hero.lead)}</p>
-<div class="cta-row"><a class="btn btn-primary" href="#contact">${esc(c.hero.cta)} ${icon('arrow', 'flip')}</a><a class="btn btn-ghost" href="${callHref}">${icon('calendar')} ${esc(c.hero.call)}</a></div>
-<ul class="trust">${c.hero.trust.map((t) => `<li>${icon('tick')}${esc(t)}</li>`).join('')}</ul>
-</div>
-<div>${flow(c)}</div>
-</div>
-<ul class="stats">${c.stats
-    .map(
-      (s) =>
-        `<li><strong${s.count ? ` aria-hidden="true" data-count="${s.count}" data-locale="${c.numLocale}"` : ''}>${esc(s.text)}</strong>${s.count ? `<span class="sr-only">${esc(s.text)}</span>` : ''}<span>${esc(s.label)}</span></li>`
-    )
-    .join('')}</ul>
-</div></section>
-
-<section id="audience" aria-labelledby="audience-h"><div class="wrap">
-<div class="section-head reveal"><h2 id="audience-h">${esc(c.audience.h2)}</h2><p>${esc(c.audience.intro)}</p></div>
-<div class="grid grid-3">${c.audience.items
-    .map((a, i) => `<article class="card hover reveal"><div class="card-icon">${icon(['fsm', 'users', 'server'][i])}</div><h3>${esc(a.title)}</h3><p>${esc(a.text)}</p></article>`)
-    .join('')}</div>
-</div></section>
-
-<section id="services" class="alt" aria-labelledby="services-h"><div class="wrap">
-<div class="section-head reveal"><h2 id="services-h">${esc(c.services.h2)}</h2><p>${esc(c.services.intro)}</p></div>
-<div class="grid grid-3"><article class="card feature reveal"><div class="card-icon">${icon('erp')}</div><p class="group">${esc(c.services.b1.group)}</p><h3>${esc(c.services.b1.title)}</h3><p>${esc(c.services.b1.text)}</p><ul class="sub">${c.services.b1.items
-    .map((s) => `<li>${icon(s.icon)}<div><b>${esc(s.title)}</b><span>${esc(s.text)}</span></div></li>`)
-    .join('')}</ul></article>${c.services.items
-    .map(
-      (s) =>
-        `<article class="card hover reveal"><div class="card-icon">${icon(s.icon)}</div><p class="group">${esc(s.group)}</p><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p></article>`
-    )
-    .join('')}</div>
-</div></section>
-
-<section id="cases" aria-labelledby="cases-h"><div class="wrap">
-<div class="section-head reveal"><h2 id="cases-h">${esc(c.cases.h2)}</h2><p>${esc(c.cases.intro)}</p></div>
-<div class="cases">${c.cases.items
-    .map(
-      (k) => `<article class="case reveal"><div><span class="tag">${esc(k.tag)}</span><h3>${esc(k.title)}</h3><dl class="sar">
-<dt>${esc(c.cases.labels.situation)}</dt><dd>${esc(k.situation)}</dd>
-<dt>${esc(c.cases.labels.solution)}</dt><dd>${esc(k.solution)}</dd>
-<dt>${esc(c.cases.labels.result)}</dt><dd class="result">${icon('check')}<span>${esc(k.result)}</span></dd></dl></div>
-${caseArt(k.art, c, k.title)}</article>`
-    )
-    .join('')}</div>
-<div class="section-head reveal more-h"><h2 id="more-h">${esc(c.projects.h2)}</h2><p>${esc(c.projects.intro)}</p></div>
-<div class="grid grid-3 proj">${c.projects.items
-    .map(
-      (p) =>
-        `<article class="card hover reveal"><div class="card-icon">${icon(p.icon)}</div><span class="tag">${esc(p.tag)}</span><h3>${esc(p.title)}</h3><p>${esc(p.text)}</p>${p.tech && p.tech.length ? `<p class="tags">${p.tech.map((t) => `<span dir="ltr">${esc(t)}</span>`).join('')}</p>` : ''}</article>`
-    )
-    .join('')}</div>
-<div class="card cta-card cta-banner reveal"><div><h3>${esc(c.projects.ctaTitle)}</h3><p>${esc(c.projects.ctaText)}</p></div><a class="btn btn-primary" href="${callHref}">${icon('calendar')} ${esc(c.hero.call)}</a></div>
-</div></section>
-
-<section id="packages" class="alt" aria-labelledby="packages-h"><div class="wrap">
-<div class="section-head reveal"><h2 id="packages-h">${esc(c.packages.h2)}</h2><p>${esc(c.packages.intro)}</p></div>
-<div class="grid grid-4">${c.packages.items
-    .map(
-      (p) =>
-        `<article class="card hover pkg reveal"><div class="card-icon">${icon(p.icon)}</div><h3>${esc(p.title)}</h3><p>${esc(p.text)}</p><ul>${p.points.map((x) => `<li>${icon('tick')}<span>${esc(x)}</span></li>`).join('')}</ul><a class="btn btn-ghost btn-sm" href="mailto:${EMAIL}?subject=${encodeURIComponent(c.packages.subject + ': ' + p.title)}">${esc(c.packages.cta)} ${icon('arrow', 'flip')}</a></article>`
-    )
-    .join('')}</div>
-<p class="note">${esc(c.packages.note)}</p>
-</div></section>
-
-<section id="process" aria-labelledby="process-h"><div class="wrap">
-<div class="section-head reveal"><h2 id="process-h">${esc(c.process.h2)}</h2></div>
-<ol class="steps">${c.process.items.map((s) => `<li class="card reveal"><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p></li>`).join('')}</ol>
-</div></section>
-
-<section id="about" class="alt" aria-labelledby="about-h"><div class="wrap about-grid">
-<div class="reveal"><div class="section-head" style="margin-bottom:1.5rem"><h2 id="about-h">${esc(c.about.h2)}</h2></div>
-${c.about.paragraphs.map((p) => `<p>${esc(p)}</p>`).join('')}
-<div class="facts-box"><h3>${esc(c.about.factsTitle)}</h3><dl>${c.about.facts
-    .map(([k, v]) => `<dt>${esc(k)}</dt><dd>${v === 'MAILTO' ? `<a href="mailto:${EMAIL}">${esc(c.contact.mailText)}</a>` : esc(v)}</dd>`)
-    .join('')}</dl></div></div>
-<aside class="card person reveal" aria-labelledby="person-h"><div class="portrait logo" aria-hidden="true">${logo()}</div><h3 id="person-h">${esc(c.about.contactTitle)}</h3><p class="role">${esc(c.about.person.role)} · ${BRAND}</p><p class="cred">${esc(c.about.person.cred)}</p>
-<p class="bio">${esc(c.about.person.text)}</p>
-<a class="btn btn-primary" href="${callHref}">${icon('calendar')} ${esc(c.hero.call)}</a></aside>
-</div></section>
-
-<section id="faq" aria-labelledby="faq-h"><div class="wrap">
-<div class="section-head reveal"><h2 id="faq-h">${esc(c.faq.h2)}</h2></div>
-<div class="faq">${c.faq.items.map((f, i) => `<details${i === 0 ? ' open' : ''}><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join('')}</div>
-</div></section>
-
-<section id="contact" class="contact" aria-labelledby="contact-h"><div class="wrap contact-grid">
-<div><h2 id="contact-h">${esc(c.contact.h2)}</h2><p class="lead">${esc(c.contact.lead)}</p>
-<a class="btn btn-primary" href="${callHref}">${icon('calendar')} ${esc(c.contact.call)}</a>
-<p class="small">${esc(c.contact.emailLabel)}</p>
-<a class="mail" href="mailto:${EMAIL}?subject=${encodeURIComponent(c.contact.form.subject)}">${icon('mail')} ${esc(c.contact.mailText)}</a></div>
-<div class="form-card"><h3>${esc(c.contact.form.title)}</h3>
-<form class="form" id="cf" data-subject="${esc(c.contact.form.subject)}">
-<div class="two"><div class="field"><label for="f-name">${esc(c.contact.form.name)}</label><input id="f-name" name="name" autocomplete="name" required></div>
-<div class="field"><label for="f-email">${esc(c.contact.form.email)}</label><input id="f-email" name="email" type="email" autocomplete="email" dir="ltr" required></div></div>
-<div class="field"><label for="f-company">${esc(c.contact.form.company)}</label><input id="f-company" name="company" autocomplete="organization"></div>
-<div class="field"><label for="f-msg">${esc(c.contact.form.message)}</label><textarea id="f-msg" name="message" required></textarea></div>
-<div><button class="btn btn-primary" type="submit">${icon('mail')} ${esc(c.contact.form.submit)}</button></div>
-<p class="note">${esc(c.contact.form.note)}</p>
-</form></div>
-</div></section>
-</main>
-${footer(c, depth)}
-<script>${themeScript}${motionScript}var f=document.getElementById('cf');f.addEventListener('submit',function(e){e.preventDefault();var g=function(n){return(f.elements[n].value||'').trim()},b=g('message')+'\\n\\n— '+g('name')+(g('company')?' · '+g('company'):'')+'\\n'+g('email');location.href='mailto:${EMAIL}?subject='+encodeURIComponent(f.dataset.subject+': '+g('name'))+'&body='+encodeURIComponent(b)});</script>
-</body>
-</html>
-`;
-}
 
 function legal(page) {
   const c = page.lang === 'de' ? de : en;
@@ -534,7 +328,6 @@ ${c.faq.items.map((f) => `### ${f.q}\n${f.a}`).join('\n\n')}
 - [English](${SITE}en/)
 - [Deutsch](${SITE})
 - [العربية](${SITE}ar/)
-- [简体中文](${SITE}zh/)
 - [Impressum](${SITE}de/impressum/) · [Imprint](${SITE}en/imprint/)
 - [Datenschutz](${SITE}de/datenschutz/) · [Privacy](${SITE}en/privacy/)
 `;
@@ -562,10 +355,9 @@ function langHint() {
   const T = {
     en: ['This page is also available in English.', 'Switch to English', 'Close'],
     ar: ['هذه الصفحة متوفرة أيضًا باللغة العربية.', 'الانتقال إلى العربية', 'إغلاق'],
-    zh: ['本页面也提供简体中文版。', '切换到中文', '关闭'],
   };
   return `<div class="lang-hint" id="lang-hint" role="region" aria-label="Language" hidden><p></p><a class="btn btn-primary btn-sm" href="#"></a><button class="icon-btn" type="button"></button></div>
-<script>(function(){var T=${JSON.stringify(T)},H={en:'en/',ar:'ar/',zh:'zh/'},L=navigator.languages||[navigator.language||''],k=null;for(var i=0;i<L.length;i++){var x=String(L[i]).slice(0,2).toLowerCase();if(x==='de')return;if(T[x]){k=x;break}}if(!k)return;try{if(localStorage.getItem('lang-hint')==='off')return}catch(e){}var el=document.getElementById('lang-hint'),t=T[k];el.lang=k==='zh'?'zh-Hans':k;el.dir=k==='ar'?'rtl':'ltr';el.querySelector('p').textContent=t[0];var a=el.querySelector('a');a.textContent=t[1];a.href=H[k];a.hreflang=k;var b=el.querySelector('button');b.setAttribute('aria-label',t[2]);b.innerHTML='\u00d7';b.addEventListener('click',function(){el.hidden=true;try{localStorage.setItem('lang-hint','off')}catch(e){}});el.hidden=false})()</script>
+<script>(function(){var T=${JSON.stringify(T)},H={en:'en/',ar:'ar/'},L=navigator.languages||[navigator.language||''],k=null;for(var i=0;i<L.length;i++){var x=String(L[i]).slice(0,2).toLowerCase();if(x==='de')return;if(T[x]){k=x;break}}if(!k)return;try{if(localStorage.getItem('lang-hint')==='off')return}catch(e){}var el=document.getElementById('lang-hint'),t=T[k];el.lang=k==='zh'?'zh-Hans':k;el.dir=k==='ar'?'rtl':'ltr';el.querySelector('p').textContent=t[0];var a=el.querySelector('a');a.textContent=t[1];a.href=H[k];a.hreflang=k;var b=el.querySelector('button');b.setAttribute('aria-label',t[2]);b.innerHTML='\u00d7';b.addEventListener('click',function(){el.hidden=true;try{localStorage.setItem('lang-hint','off')}catch(e){}});el.hidden=false})()</script>
 `;
 }
 
@@ -587,11 +379,18 @@ const keep = (html) => {
     // the hero h1 keeps normal spaces: its .nw span only stays unbroken from 360px up (320px reflow)
     .replace(/<h1[\s\S]*?<\/h1>/, (h) => h.replaceAll(NB, ' '));
 };
-for (const c of LANGS) write(`${homePath(c)}index.html`, c.lang === 'de' ? keep(landing(c)).replace('</body>', `${langHint()}</body>`) : keep(landing(c)));
+
 write('de/index.html', deRedirect());
 // Angebot „Webseite zum Festpreis“ (DE/EN/AR)
 const LANGS_BY = Object.fromEntries(LANGS.map((l) => [l.lang, l]));
 for (const l of OFFER_LANGS) write(`${OFFER_PATHS[l]}index.html`, keep(renderOffer(l, { head, header, footer, icon, esc, up, themeScript, motionScript, LANGS_BY, EMAIL })));
+// Startseiten: persönliches Profil (DE an der Wurzel, /en/, /ar/)
+for (const l of PROFILE_LANGS) {
+  const html = keep(renderProfile(l, { head, header, footer, icon, esc, up, themeScript, motionScript, caseArt, LANGS_BY, EMAIL, homePath, alternates: alternatesHome, jsonLd }));
+  write(`${homePath(LANGS_BY[l])}index.html`, l === 'de' ? html.replace('</body>', `${langHint()}</body>`) : html);
+}
+// Alte chinesische Seite: auf Englisch umleiten
+write('zh/index.html', deRedirect().replaceAll('../', '../en/').replace(`<link rel="canonical" href="${SITE}">`, `<link rel="canonical" href="${SITE}en/">`));
 for (const p of legalPages(EMAIL)) write(`${p.path}index.html`, legal(p));
 write('404.html', notFound());
 write('sitemap.xml', sitemap());

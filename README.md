@@ -17,3 +17,11 @@ Static, dependency-free site for TOF Solution (SAP Business One, SAP Field Servi
 - Terminbuchung ohne Fremdkonto: freie Slots im Browser, fertige E-Mail an die Kontaktadresse, Bestätigung + .ics
 - Demo-Screenshots `src/static/webseite/demo-*.webp` (eigene, fiktive Musterseiten; Repo `webseite-demos`), PDFs + OG-Bild: `node src/tools/render-offer.mjs`
 - Werbepaket: `marketing/webseite-1000/` (nicht Teil der ausgelieferten Seite)
+
+## Persönliche Profilseite (Branch `profil-2026`)
+
+- Startseiten DE (`/`), EN (`/en/`), AR (`/ar/`) = persönliches Freelance-Profil (SAP Business One & SAP FSM), Vorlage `src/profile.mjs`, Texte `src/content/profil.mjs`
+- **Platzhalter** (gelb gestrichelt markiert) in `PROFILE` eintragen: Name, Foto, Verfügbarkeit, Auslastung, Profil-Links, Profil-PDF
+- Chinesisch entfällt; `/zh/` leitet auf `/en/` um
+- Kontrast-Check: `node src/tools/check-contrast.mjs` (läuft auch in CI)
+- Vorschau-Build ohne Indexierung: `PREVIEW=1 node src/build.mjs` → Cloudflare Pages Projekt `tarekfatal-vorschau`
